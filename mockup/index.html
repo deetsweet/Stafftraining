@@ -239,6 +239,27 @@ td .sub{font-size:12.5px;color:var(--ink-3)}
 .private .label{color:var(--bad)}
 .actions{display:flex;flex-direction:column;gap:10px}
 
+/* referee statements */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.rsec{font-size:20px;margin-top:10px}
+.stmt{margin:0;min-width:0;background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px;transition:border-color .2s,background .2s}
+.stmt p{font-size:16px;line-height:1.45}
+.stmt.is-ok{border-color:var(--ok)}
+.stmt.is-bad{border-color:var(--bad);background:var(--bad-bg)}
+.rsel{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:var(--r-field);padding:12px 14px;font-size:16px}
+.yn{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.yn label{position:relative;display:flex;align-items:center;justify-content:center;gap:7px;border:1.5px solid transparent;border-radius:999px;padding:11px 10px;cursor:pointer;font-weight:700;font-size:14.5px;line-height:1.2;text-align:center;transition:background .15s,color .15s}
+.yn input{position:absolute;opacity:0;pointer-events:none}
+.yn label.g{background:var(--ok-bg);color:var(--ok)}
+.yn label.r{background:var(--bad-bg);color:var(--bad);border-color:var(--bad-bg)}
+.stmt.is-bad .yn label.r{border-color:var(--bad)}
+.yn label.g:has(input:checked){background:var(--ok);color:var(--bg)}
+.yn label.r:has(input:checked){background:var(--bad);color:var(--bg)}
+.yn label:has(input:focus-visible){outline:2px solid var(--blue);outline-offset:2px}
+.yn label.r span{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;border:1.5px solid currentColor;font-size:11px}
+.more textarea{width:100%;min-height:76px;border:1.5px solid var(--line);background:var(--surface);border-radius:var(--r-field);padding:12px 14px;font-size:15px;resize:vertical}
+.rfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:4px}
+
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--btn-bg);color:var(--btn-ink);padding:12px 20px;border-radius:999px;font-size:14.5px;z-index:60;box-shadow:0 10px 30px rgba(0,0,0,.2);max-width:calc(100% - 32px);text-align:center}
 </style>
 
@@ -377,7 +398,7 @@ function vHome(){
         if(st==='done' && s.id==='referees') meta='Both referees have replied';
         if(st==='done' && s.id==='bluecard') meta=`Verified · expires ${fmtDate(S.blue.exp)}`;
         if(st==='done' && s.id==='details') meta='Sarah Mitchell · 0412 345 678';
-        if(st==='wait' && s.id==='referees') meta=`${S.refs.filter(r=>r.st===3).length} of 2 replied · we’ll chase them for you`;
+        if(st==='wait' && s.id==='referees') meta = S.flagged && S.refs.every(r=>r.st===3) ? 'Both replied · the office will be in touch' : `${S.refs.filter(r=>r.st===3).length} of 2 replied · we’ll chase them for you`;
         if(st==='wait' && s.id==='bluecard') meta='Sent to the office to check in the Blue Card portal';
         return `<li><button class="step ${isNext?'is-next':''}" data-step="${s.id}">${ico}<span class="body"><span class="t">${s.t}</span><span class="m">${meta}</span></span>${chev}</button></li>`;
       }).join('')}
@@ -564,8 +585,8 @@ function renderReferee(){
         <div class="content">
           <p>Hi Mark,</p>
           <p>Sarah Mitchell would like to volunteer with children at Lifepoint Church, and she’s named you as someone who knows her well.</p>
-          <p>Could you answer five quick questions? It takes about two minutes, and your answers are private. Only our senior pastor and child safety officer can see them.</p>
-          <div><button class="btn" data-ract="open">Answer 5 quick questions <span class="arr">→</span></button></div>
+          <p>Could you give her a quick reference? It’s a few statements you tap green or red, and takes about two minutes. Your answers are private. Only our senior pastor and child safety officer can see them.</p>
+          <div><button class="btn" data-ract="open">Give a quick reference <span class="arr">→</span></button></div>
           <p class="small muted">Thank you for helping us keep our kids safe.<br>Lifepoint Church · Rothwell and Caboolture West</p>
         </div>
       </article>
@@ -575,39 +596,62 @@ function renderReferee(){
   if(R.screen==='thanks'){
     view.innerHTML = `<div class="phone"><section class="hero">${badge('ghost')}${badge('badge-sm')}
       <span class="script">thank you</span><h1>That’s all, Mark.</h1>
-      <p>Your answers have gone privately to Lifepoint’s child safety team. Thanks for helping us keep our kids safe.</p></section>
+      <p>${R.bad ? 'Thank you for telling us. Your answers have gone privately to Pastor Dan and our child safety officer, and one of them will be in touch.' : 'Your answers have gone privately to Lifepoint’s child safety team. Thanks for helping us keep our kids safe.'}</p></section>
       <button class="link" style="align-self:center" data-ract="reset">Start the referee view again</button></div>`;
     return;
   }
+  const STM = [
+    {id:'s1', sec:'About you', t:'My name is Mark Davies.', g:'That’s me', r:'That’s not me'},
+    {id:'s2', t:'I’ve known Sarah Mitchell for at least two years.', g:'Yes', r:'No, less than that'},
+    {id:'rel', t:'How do you know Sarah?', select:['I’ve led a team she served on','We work together','We’re friends','Through community or sport','Other']},
+    {id:'s3', sec:'About Sarah', t:'As far as I know, Sarah has never been accused of harming or mistreating anyone.', g:'That’s right', r:'There may be an issue'},
+    {id:'s4', t:'I would trust Sarah to care for children and vulnerable people.', g:'I agree', r:'I have doubts'},
+    {id:'s5', t:'There’s nothing about Sarah I think Lifepoint should know before she serves with children.', g:'Nothing to raise', r:'I have a concern'}
+  ];
+  const yn = STM.filter(s=>!s.select);
   view.innerHTML = `<div class="phone">
-    <section class="hero" style="gap:8px">${badge('ghost')}<span class="label" style="color:var(--on-charcoal-2)">Referee for Sarah Mitchell</span>
-      <h1 style="font-size:26px">Five quick questions</h1><p>About 2 minutes. Only our senior pastor and child safety officer will see your answers.</p></section>
-    <form id="rform" class="stack" style="gap:18px" novalidate>
-      <div class="field"><label for="q1">1. How do you know Sarah?</label>
-        <select id="q1"><option>I led a team she served on</option><option>We work together</option><option>Friend</option><option>Community or sport</option><option>Other</option></select></div>
-      <div class="field"><label for="q1b">For how long?</label>
-        <select id="q1b"><option>Less than 2 years</option><option>2–5 years</option><option selected>More than 5 years</option></select></div>
-      <div class="field"><span class="lbl">2. Have you seen Sarah with children or young people?</span>
-        <div class="choice"><label><input type="radio" name="q2" checked>Yes</label><label><input type="radio" name="q2">No</label><label><input type="radio" name="q2">Not sure</label></div></div>
-      <div class="field"><span class="lbl">3. Would you be comfortable with Sarah caring for children in your own family?</span>
-        <div class="choice"><label><input type="radio" name="q3" checked>Yes</label><label><input type="radio" name="q3">With some hesitation</label><label><input type="radio" name="q3">No</label></div></div>
-      <div class="field"><span class="lbl">4. Do you know of anything that would make Sarah unsuitable to work with children?</span>
-        <div class="choice"><label><input type="radio" name="q4" value="no" checked>No</label><label><input type="radio" name="q4" value="yes">Yes, or I’m not sure</label></div>
-        <div id="q4more" hidden class="stack" style="margin-top:8px">
-          <textarea id="q4t" aria-label="Tell us more" placeholder="Tell us as much as you’re comfortable sharing."></textarea>
-          <label class="check"><input type="checkbox" checked> Please have someone call me</label>
-          <p class="small muted">This goes straight to Pastor Dan and the child safety officer, and nobody else.</p>
-        </div></div>
-      <div class="field"><label for="q5">5. Anything else you’d like us to know? (optional)</label><textarea id="q5"></textarea></div>
-      <label class="check"><input type="checkbox" id="rtrue" checked> What I’ve said is true to the best of my knowledge.</label>
-      <button class="btn block" type="submit">Send my answers</button>
+    <section class="hero" style="gap:8px">${badge('ghost')}<span class="label" style="color:var(--on-charcoal-2)">Reference for Sarah Mitchell</span>
+      <h1 style="font-size:26px">A quick reference for Sarah</h1>
+      <p>Sarah would like to serve in Lifepoint’s Kids ministry. Tap green if a statement is true, or red if something might be an issue. It takes about two minutes.</p></section>
+    <form id="rform" class="stack" style="gap:12px" novalidate>
+      ${STM.map(s=>`${s.sec?`<h3 class="rsec">${s.sec}</h3>`:''}
+        <fieldset class="stmt" id="c-${s.id}">
+          <legend class="sr">${esc(s.t)}</legend>
+          <p aria-hidden="true">${s.t}</p>
+          ${s.select ? `<select id="rel" aria-label="${esc(s.t)}" class="rsel">${s.select.map(o=>`<option>${o}</option>`).join('')}</select>`
+          : `<div class="yn">
+              <label class="g"><input type="radio" name="${s.id}" value="g">${tick}${s.g}</label>
+              <label class="r"><input type="radio" name="${s.id}" value="r"><span aria-hidden="true">!</span>${s.r}</label>
+            </div>
+            <div class="more" hidden><textarea aria-label="Tell us more about this" placeholder="If you can, tell us a little more. Share only what you’re comfortable with."></textarea></div>`}
+        </fieldset>`).join('')}
+      <div class="private" id="rprivate" hidden>
+        <span class="label">${lock} Kept private</span>
+        <p>Thank you for being honest. Anything you flag goes only to Pastor Dan and our child safety officer. Sarah won’t see your answers.</p>
+        <div class="field"><label for="rphone">Best number to call you on (optional)</label><input id="rphone" type="tel" inputmode="tel" placeholder="04xx xxx xxx"></div>
+      </div>
+      <label class="check"><input type="checkbox" id="rtrue"> What I’ve said is true to the best of my knowledge.</label>
+      <div class="rfoot"><span id="rcount" class="small muted">0 of ${yn.length} answered</span>
+        <button class="btn" type="submit" id="rsend" disabled>Send my reference</button></div>
     </form></div>`;
   const f = $('#rform');
-  f.querySelectorAll('input[name=q4]').forEach(r => r.onchange = () => { $('#q4more').hidden = f.querySelector('input[name=q4]:checked').value!=='yes'; });
+  const update = () => {
+    let n=0, bad=false;
+    yn.forEach(s=>{
+      const v = f.querySelector(`input[name=${s.id}]:checked`)?.value, c = $('#c-'+s.id);
+      c.classList.toggle('is-ok', v==='g'); c.classList.toggle('is-bad', v==='r');
+      c.querySelector('.more').hidden = v!=='r';
+      if(v) n++; if(v==='r') bad=true;
+    });
+    $('#rprivate').hidden = !bad;
+    $('#rcount').textContent = n===yn.length ? (bad ? 'All answered · concern noted' : 'All answered · no issues') : `${n} of ${yn.length} answered`;
+    $('#rsend').disabled = !(n===yn.length && $('#rtrue').checked);
+    R.bad = bad;
+  };
+  f.addEventListener('change', update);
   f.onsubmit = e => { e.preventDefault();
-    if(!$('#rtrue').checked){ toast('Please tick the last box to confirm your answers.'); return; }
     R.screen='thanks'; render(); window.scrollTo({top:0});
-    if(S.refs[0].st<3 && S.steps.referees!=='todo'){ S.refs[0].st=3; refsCheck(); }
+    if(S.refs[0].st<3 && S.steps.referees!=='todo'){ S.refs[0].st=3; if(R.bad) S.flagged=true; refsCheck(); }
   };
 }
 
@@ -633,7 +677,7 @@ function sarahRow(){
   return {n:'Sarah Mitchell', m:'Kids', live:true,
     tr: st.training==='done'?'done': (S.chapter>0?'progress':'todo'),
     cc: st.conduct==='done'?'done':'todo',
-    rf: st.referees==='done'?'done': st.referees==='wait'?'wait':'todo',
+    rf: S.flagged?'flag': st.referees==='done'?'done': st.referees==='wait'?'wait':'todo',
     bc: st.bluecard==='done'?'ok': st.bluecard==='wait'?'check':'todo',
     exp: st.bluecard==='todo'?'':S.blue.exp, ago: doneCount()===5?'Cleared today':'Started today'};
 }
@@ -700,7 +744,7 @@ function renderDrawer(people){
       ${row(p.bc,'Blue Card', p.bc==='ok'?`Verified · exp ${fmtDate(p.exp)}`:p.bc==='check'?'Check in portal':p.bc==='expired'?`Expired ${fmtDate(p.exp)}`:'Not added')}
     </ul></section>
     ${p.rf==='flag'?`<div class="private"><span class="label">${lock} Private · Pastor and child safety officer only</span>
-      <p>A referee answered “Yes, or I’m not sure” to question 4 and asked for a call. Hannah stays off the roster until this is resolved.</p>
+      <p>A referee tapped red on “I would trust them to care for children” and left a comment and phone number. ${esc(p.n.split(' ')[0])} stays off the roster until this is resolved.</p>
       <button class="link" style="align-self:flex-start" data-act="note">Record the outcome</button></div>`:''}
     ${p.bc==='expired'?`<div class="private"><span class="label">Removed from roster</span><p>Ben’s Blue Card expired on ${fmtDate(p.exp)}. ChurchSuite was updated automatically and he’s been sent renewal steps.</p></div>`:''}
     <div class="actions">
@@ -722,7 +766,7 @@ function render(){
 function setMode(m){ mode=m; try{ history.replaceState(null,'','#'+m); }catch(e){} render(); window.scrollTo({top:0}); }
 
 function refsCheck(){
-  if(S.refs.every(r=>r.st===3)){ S.steps.referees='done'; toast('Both referees have replied.'); }
+  if(S.refs.every(r=>r.st===3) && !S.flagged){ S.steps.referees='done'; toast('Both referees have replied.'); }
   if(mode==='volunteer') render(); else if(mode==='admin') renderAdmin();
 }
 
@@ -739,7 +783,7 @@ document.addEventListener('click', e => {
   if(t.dataset.pick!==undefined){ S.picked=+t.dataset.pick; render(); return; }
   if(t.dataset.filter){ A.filter = (A.filter===t.dataset.filter && t.dataset.filter!=='all')?'all':t.dataset.filter; renderAdmin(); return; }
   if(t.dataset.person){ A.open=t.dataset.person; renderDrawer(); return; }
-  if(t.dataset.ract==='open'){ R.screen='form'; render(); window.scrollTo({top:0}); return; }
+  if(t.dataset.ract==='open'){ R.screen='form'; R.bad=false; render(); window.scrollTo({top:0}); return; }
   if(t.dataset.ract==='reset'){ R.screen='email'; render(); return; }
   const a = t.dataset.act;
   if(a==='play'){ S.playing=true; render(); }
