@@ -242,6 +242,38 @@ td .sub{font-size:12.5px;color:var(--ink-3)}
 .private .label{color:var(--bad)}
 .actions{display:flex;flex-direction:column;gap:10px}
 
+
+/* certificate: a printed document, so it keeps one fixed brand look in both themes */
+.cert-overlay{position:fixed;inset:0;z-index:50;background:rgba(20,20,20,.72);overflow-y:auto;padding:calc(20px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;align-items:center;gap:16px}
+.cert-tools{width:100%;max-width:960px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.cert-tools .btn.ghost{color:#FFFBF0;border-color:#FFFBF0}
+.cert-tools p{color:#BFCFD7;font-size:13px}
+.cert{container-type:inline-size;width:100%;max-width:960px;aspect-ratio:297/210;background:#FFFBF0;color:#333333;position:relative;overflow:hidden;display:grid;grid-template-columns:31% 1fr;box-shadow:0 30px 70px -20px rgba(0,0,0,.6);font-family:var(--font-body)}
+.cert-side{background:#333333;color:#FFFBF0;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:6cqw 3.6cqw 3.6cqw}
+.cert-side .big{position:absolute;left:-14cqw;bottom:-10cqw;width:48cqw;height:48cqw;color:rgba(113,128,109,.55)}
+.cert-side .logo{position:relative;width:19cqw;height:auto;color:#FFFBF0;align-self:center}
+.cert-side .meta{position:relative;font-size:1.15cqw;letter-spacing:.18em;text-transform:uppercase;color:#BFCFD7;line-height:1.9}
+.cert-side .meta b{color:#FFFBF0;font-weight:700}
+.cert-main{position:relative;padding:5.2cqw 5.4cqw 4cqw 5cqw;display:flex;flex-direction:column}
+.cert-main:before{content:"";position:absolute;inset:2cqw 2cqw 2cqw 0;border:1px solid #B1B89F;border-left:0;pointer-events:none}
+.cert-eyebrow{font-weight:700;font-size:1.25cqw;letter-spacing:.32em;text-transform:uppercase;color:#3D6270}
+.cert-script{font-family:var(--font-script);font-size:3.6cqw;color:#71806D;line-height:1;margin-top:3.4cqw}
+.cert-name{font-family:var(--font-head);font-weight:500;font-size:6.4cqw;line-height:1;margin-top:1.4cqw;letter-spacing:-.01em}
+.cert-body{font-size:1.55cqw;line-height:1.55;color:#4a4a48;max-width:46cqw;margin-top:1.8cqw}
+.cert-title{font-family:var(--font-head);font-style:italic;font-weight:700;text-transform:uppercase;font-size:4.6cqw;line-height:.95;margin-top:1.6cqw;letter-spacing:.005em}
+.cert-sub{font-family:var(--font-head);font-weight:500;font-size:1.9cqw;color:#3D6270;margin-top:.8cqw}
+.cert-checks{display:grid;grid-template-columns:repeat(4,1fr);gap:1.6cqw;margin-top:auto;padding-top:2.4cqw;border-top:1px solid #E1D9C6}
+.cert-checks div{display:flex;flex-direction:column;gap:.4cqw}
+.cert-checks .k{font-size:1cqw;letter-spacing:.2em;text-transform:uppercase;color:#71806D;font-weight:700;display:flex;align-items:center;gap:.6cqw}
+.cert-checks .k i{width:1.5cqw;height:1.5cqw;border-radius:50%;background:#71806D;display:inline-grid;place-items:center;color:#FFFBF0;font-style:normal;font-size:1cqw}
+.cert-checks .v{font-size:1.3cqw;color:#333333;line-height:1.35}
+.cert-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:3cqw;margin-top:3cqw}
+.cert-sign{min-width:22cqw}
+.cert-sign .line{border-top:1px solid #333333;padding-top:.8cqw;font-family:var(--font-head);font-weight:500;font-size:1.5cqw}
+.cert-sign .role{font-size:1.15cqw;color:#6b6862}
+.cert-sign .space{height:4cqw}
+.cert-valid{text-align:right;font-size:1.15cqw;color:#6b6862;line-height:1.5}
+.cert-valid b{font-family:var(--font-head);font-weight:500;font-size:1.6cqw;color:#333333;display:block}
 /* referee statements */
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .rsec{font-size:20px;margin-top:10px}
@@ -268,6 +300,7 @@ td .sub{font-size:12.5px;color:var(--ink-3)}
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="badge" viewBox="0 0 500 500"><path fill="currentColor" d="M147.34,100.24c-26.2,27.72-98.66,99.18-117.920,118.14-3.04,2.99-4.75,7.11-4.75,11.42v228.99h28.37c57.380,0,103.91-47.35,103.96-105.79l.2-248.71c0-5.25-6.27-7.82-9.85-4.04Z"/><path fill="currentColor" d="M193.77,43.01c-3.64-3.78-10.03-1.21-10.03,4.04v306.06c.31,58.25,49.26,105.67,107.52,105.67h25V174.78c0-4.16-1.63-8.16-4.55-11.13-18.87-19.2-91.18-92.84-117.94-120.64Z"/><path fill="currentColor" d="M352.84,228.68c-3.64-3.78-10.03-1.21-10.03,4.04v126.58c0,54.95,44.55,99.5,99.5,99.5h33.03v-98.35c0-4.16-1.63-8.16-4.55-11.130-18.87-19.2-91.18-92.84-117.94-120.64Z"/></symbol>
+  <symbol id="primary" viewBox="0 0 650 432.33"><g fill="currentColor"><path d="M275.43,34.19c-12.04,12.73-45.33,45.57-54.18,54.28-1.4,1.37-2.18,3.27-2.18,5.24v105.2h13.03c26.36,0,47.74-21.75,47.76-48.6l.09-114.26c0-2.41-2.88-3.59-4.52-1.86Z"/><path d="M296.76,7.9c-1.67-1.74-4.61-.56-4.61,1.86v140.61c.14,26.76,22.63,48.55,49.4,48.55h11.49V68.43c0-1.91-.75-3.75-2.09-5.11-8.67-8.82-41.89-42.65-54.18-55.42Z"/><path d="M369.84,93.19c-1.67-1.74-4.61-.56-4.61,1.86v58.15c0,25.25,20.47,45.71,45.71,45.71h15.17v-45.18c0-1.91-.75-3.75-2.09-5.11-8.67-8.82-41.89-42.65-54.19-55.42Z"/><path d="M28.86,263.12v64.07h21.99v10.77H17.42v-74.85h11.45Z"/><path d="M96.3,263.12v74.85h-11.45v-74.85h11.45Z"/><path d="M170.16,273.9h-26.03v18.96h25.14v10.77h-25.14v34.34h-11.45v-74.85h37.48v10.77Z"/><path d="M242.9,273.9h-29.85v18.96h28.95v10.77h-28.95v23.56h29.85v10.77h-41.29v-74.85h41.29v10.77Z"/><path d="M291.43,263.12c4.6,0,11,.45,16.38,4.04,6.28,4.15,9.31,11.33,9.31,18.18,0,4.38-1.12,11.11-7.29,16.38-5.95,5.05-12.79,5.84-18.29,5.84h-5.16v30.41h-11.45v-74.85h16.49ZM286.38,297.01h5.16c9.87,0,14.59-4.82,14.59-11.78,0-4.15-1.68-11.56-14.7-11.56h-5.05v23.34Z"/><path d="M413.1,300.6c0,21.99-16.49,38.83-38.94,38.83s-38.94-16.83-38.94-38.83,16.5-38.83,38.94-38.83,38.94,16.83,38.94,38.83ZM401.66,300.6c0-16.61-11.45-28.28-27.49-28.28s-27.49,11.67-27.49,28.28,11.45,28.28,27.49,28.28,27.49-11.67,27.49-28.28Z"/><path d="M453.74,263.12v74.85h-11.45v-74.85h11.45Z"/><path d="M488.92,337.97v-79.9l54.31,56.89v-51.84h11.45v79.45l-54.31-56.89v52.29h-11.45Z"/><path d="M615.42,273.9v64.07h-11.45v-64.07h-17.17v-10.77h45.78v10.77h-17.17Z"/><path d="M223.6,388.68c-3.85-4.52-9.38-7.09-15.19-7.09-11.54,0-20.18,9.25-20.18,20.66,0,13.37,11.14,20.32,20.25,20.32,4.52,0,10.53-1.82,15.12-6.82v3.92c-4.59,4.05-10.13,5.6-14.99,5.6-13.5,0-23.49-10.6-23.49-23.15s10.4-23.22,23.36-23.22c8.57,0,13.77,4.59,15.12,5.87v3.92Z"/><path d="M243.04,398.6h27.27v-19.1h2.97v45.03h-2.97v-23.22h-27.27v23.22h-2.97v-45.03h2.97v19.1Z"/><path d="M295.15,379.5v28.15c0,4.25.2,7.02,1.89,9.72,2.63,4.25,7.56,5.2,10.46,5.2s7.83-.95,10.46-5.2c1.69-2.7,1.89-5.47,1.89-9.72v-28.15h2.97v28.15c0,4.93-.27,8.17-2.57,11.54-3.37,4.93-8.71,6.07-12.76,6.07s-9.38-1.15-12.76-6.07c-2.29-3.37-2.57-6.62-2.57-11.54v-28.15h2.97Z"/><path d="M360.62,424.52l-14.58-21.26h-1.35v21.26h-2.97v-45.03h6.48c3.44,0,6.55.27,9.52,2.3,3.51,2.43,4.66,6.14,4.66,9.65,0,4.46-1.96,9.05-7.56,10.94-2.36.81-4.52.88-5.54.88l14.72,21.26h-3.38ZM344.69,400.56h4.32c6.41,0,10.26-3.38,10.26-9.18,0-4.52-2.23-6.89-3.98-7.83-1.89-1.08-5.13-1.35-6.89-1.35h-3.71v18.36Z"/><path d="M416.1,388.68c-3.85-4.52-9.38-7.09-15.19-7.09-11.54,0-20.18,9.25-20.18,20.66,0,13.37,11.14,20.32,20.25,20.32,4.52,0,10.53-1.82,15.12-6.82v3.92c-4.59,4.05-10.13,5.6-14.99,5.6-13.5,0-23.49-10.6-23.49-23.15s10.4-23.22,23.36-23.22c8.57,0,13.77,4.59,15.12,5.87v3.92Z"/><path d="M435.54,398.6h27.27v-19.1h2.97v45.03h-2.97v-23.22h-27.27v23.22h-2.97v-45.03h2.97v19.1Z"/></g></symbol>
   <symbol id="wordmark" viewBox="0 0 910 117"><g fill="currentColor"><path d="M157.18,62.21v38.13h13.09v6.41h-19.9v-44.54h6.81Z"/><path d="M200.39,62.21v44.54h-6.81v-44.54h6.81Z"/><path d="M248.31,68.62h-15.49v11.29h14.96v6.41h-14.96v20.44h-6.81v-44.54h22.31v6.41Z"/><path d="M294.57,68.62h-17.76v11.29h17.23v6.41h-17.23v14.02h17.76v6.41h-24.58v-44.54h24.58v6.41Z"/><path d="M327.13,62.21c2.74,0,6.54.27,9.75,2.4,3.74,2.47,5.54,6.75,5.54,10.82,0,2.6-.67,6.61-4.34,9.75-3.54,3.01-7.61,3.470-10.89,3.47h-3.07v18.1h-6.81v-44.54h9.82ZM324.13,82.38h3.07c5.88,0,8.68-2.87,8.68-7.01,0-2.47-1-6.88-8.75-6.88h-3.01v13.89Z"/><path d="M407.52,84.52c0,13.09-9.82,23.11-23.17,23.11s-23.17-10.02-23.17-23.11,9.82-23.11,23.17-23.11,23.17,10.02,23.17,23.11ZM400.71,84.52c0-9.88-6.81-16.83-16.36-16.83s-16.36,6.95-16.36,16.830,6.81,16.83,16.36,16.83,16.36-6.95,16.36-16.83Z"/><path d="M433.85,62.21v44.54h-6.81v-44.54h6.81Z"/><path d="M460.45,106.76v-47.55l32.32,33.86v-30.85h6.81v47.28l-32.32-33.86v31.12h-6.81Z"/><path d="M538.53,68.62v38.13h-6.81v-38.13h-10.22v-6.41h27.25v6.41h-10.22Z"/><path d="M618.07,70.92c-3.92-4.6-9.55-7.21-15.45-7.21-11.75,0-20.54,9.41-20.54,21.02,0,13.6,11.33,20.67,20.61,20.67,4.6,0,10.72-1.85,15.39-6.94v3.98c-4.67,4.12-10.3,5.7-15.25,5.7-13.74,0-23.9-10.78-23.9-23.56s10.58-23.63,23.77-23.63c8.72,0,14.01,4.67,15.39,5.98v3.98Z"/><path d="M644.15,81.01h27.75v-19.44h3.02v45.81h-3.02v-23.63h-27.75v23.63h-3.020v-45.81h3.02v19.44Z"/><path d="M704.48,61.57v28.64c0,4.33.21,7.14,1.92,9.89,2.68,4.33,7.69,5.29,10.65,5.29s7.97-.96,10.65-5.29c1.72-2.75,1.92-5.56,1.92-9.89v-28.64h3.02v28.64c0,5.01-.27,8.31-2.61,11.75-3.43,5.01-8.86,6.18-12.98,6.18s-9.55-1.17-12.98-6.18c-2.34-3.43-2.61-6.73-2.61-11.75v-28.64h3.02Z"/><path d="M779.38,107.39l-14.84-21.64h-1.37v21.64h-3.02v-45.81h6.59c3.5,0,6.66.27,9.68,2.34,3.57,2.47,4.74,6.25,4.74,9.82,0,4.53-1.99,9.2-7.69,11.13-2.4.82-4.6.89-5.63.89l14.97,21.64h-3.43ZM763.17,83.01h4.4c6.53,0,10.44-3.43,10.44-9.34,0-4.6-2.27-7.01-4.05-7.97-1.920-1.1-5.22-1.37-7.01-1.37h-3.78v18.68Z"/><path d="M844.13,70.92c-3.92-4.6-9.55-7.21-15.45-7.21-11.75,0-20.54,9.41-20.54,21.02,0,13.6,11.33,20.67,20.61,20.67,4.6,0,10.72-1.85,15.39-6.94v3.98c-4.67,4.12-10.3,5.7-15.25,5.7-13.74,0-23.9-10.78-23.9-23.56s10.58-23.63,23.77-23.63c8.72,0,14.01,4.67,15.39,5.98v3.98Z"/><path d="M870.22,81.01h27.75v-19.44h3.02v45.81h-3.02v-23.63h-27.75v23.63h-3.02v-45.81h3.02v19.44Z"/><path d="M38.97,21.92c-6.4,6.77-24.1,24.22-28.8,28.86-.74.73-1.16,1.74-1.16,2.79v55.93h6.93c14.01,0,25.38-11.57,25.39-25.84l.05-60.74c0-1.28-1.53-1.91-2.41-.99Z"/><path d="M50.31,7.95c-.89-.92-2.45-.3-2.45.99v74.75c.08,14.23,12.03,25.81,26.26,25.81h6.11V40.13c0-1.02-.4-1.99-1.11-2.72-4.61-4.69-22.27-22.67-28.81-29.46Z"/><path d="M89.16,53.29c-.89-.92-2.45-.3-2.45.99v30.91c0,13.42,10.88,24.3,24.3,24.3h8.07v-24.02c0-1.02-.4-1.99-1.11-2.72-4.61-4.69-22.27-22.67-28.81-29.46Z"/></g></symbol>
 </svg>
 
@@ -540,11 +573,56 @@ function vCleared(){
         <li><span>Blue Card</span><span>Expires ${fmtDate(S.blue.exp)}</span></li>
       </ul>
     </section>
+    <button class="btn block" data-act="cert">View my certificate <span class="arr">→</span></button>
     <button class="btn ghost block" data-go="home">See my steps</button>
     <button class="link" style="align-self:center" data-act="restart">Restart the prototype</button>
   </div>`;
 }
 
+
+function certData(){
+  const today = new Date('2026-11-14T00:00:00');
+  const refresher = new Date(today); refresher.setFullYear(today.getFullYear()+1);
+  const bc = new Date(S.blue.exp+'T00:00:00');
+  const valid = bc < refresher ? bc : refresher;
+  const f = d => d.toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'});
+  return {name:'Sarah Mitchell', team:'Welcome team', no:'LP-2026-0347', issued:f(today), short:today.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}), valid:f(valid), bcExp:f(bc)};
+}
+function certHTML(){
+  const d = certData();
+  return `<article class="cert" id="cert" aria-label="Certificate for ${esc(d.name)}">
+    <div class="cert-side">${badge('big')}
+      <svg class="logo" viewBox="0 0 650 432.33" role="img" aria-label="Lifepoint Church"><use href="#primary"/></svg>
+      <div class="meta">Certificate no.<br><b>${d.no}</b><br>Issued<br><b>${d.issued}</b></div>
+    </div>
+    <div class="cert-main">
+      <span class="cert-eyebrow">Certificate of clearance</span>
+      <span class="cert-script">this is to certify that</span>
+      <span class="cert-name">${esc(d.name)}</span>
+      <p class="cert-body">has completed every step of Lifepoint Church’s volunteer safety process and is officially cleared to join</p>
+      <span class="cert-title">Team Lifepoint</span>
+      <span class="cert-sub">as a Lifepoint Team Member · ${esc(d.team)}</span>
+      <div class="cert-checks">
+        <div><span class="k"><i>✓</i>Training</span><span class="v">Safe Volunteers<br>completed ${d.short}</span></div>
+        <div><span class="k"><i>✓</i>Conduct</span><span class="v">Code of conduct<br>signed · v2026.1</span></div>
+        <div><span class="k"><i>✓</i>Referees</span><span class="v">Two references<br>received</span></div>
+        <div><span class="k"><i>✓</i>Blue Card</span><span class="v">Verified<br>expires ${d.bcExp}</span></div>
+      </div>
+      <div class="cert-foot">
+        <div class="cert-sign"><div class="space"></div><div class="line">Dan Sweetman</div><div class="role">Senior Pastor, Lifepoint Church</div></div>
+        <div class="cert-valid">Valid until<b>${d.valid}</b>Renewed with the annual refresher</div>
+      </div>
+    </div>
+  </article>`;
+}
+function openCert(){
+  layer.innerHTML = `<div class="cert-overlay" role="dialog" aria-modal="true" aria-label="Your certificate">
+    <div class="cert-tools"><button class="btn ghost" data-act="close-cert">✕ Close</button>
+      <button class="btn light" data-act="cert-pdf">Download PDF</button></div>
+    ${certHTML()}
+    <div class="cert-tools"><p>A copy is also emailed to Sarah and saved on her record for the office.</p></div>
+  </div>`;
+}
 function confetti(){
   const box = $('#conf'); if(!box || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const cols=['#B1B89F','#BFCFD7','#FFFBF0','#71806D','#3D6270'];
@@ -809,10 +887,13 @@ document.addEventListener('click', e => {
   if(a==='cs'){ toast('This would open their ChurchSuite profile.'); }
   if(a==='note'){ toast('This would open a private note only you can see.'); }
   if(a==='close'){ A.open=null; layer.innerHTML=''; }
+  if(a==='cert'){ openCert(); }
+  if(a==='close-cert'){ layer.innerHTML=''; }
+  if(a==='cert-pdf'){ toast('In the real app this saves a PDF to your phone. The prototype can’t download files.'); }
   if(a==='restart'){ S=fresh(); render(); window.scrollTo({top:0}); }
 });
 document.addEventListener('keydown', e => {
-  if(e.key==='Escape' && A.open){ A.open=null; layer.innerHTML=''; }
+  if(e.key==='Escape' && (A.open || $('.cert-overlay'))){ A.open=null; layer.innerHTML=''; }
   if(e.key==='Enter' && e.target.matches('tr[data-person]')){ A.open=e.target.dataset.person; renderDrawer(); }
 });
 document.addEventListener('change', e => {
