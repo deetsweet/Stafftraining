@@ -1,0 +1,780 @@
+<title>Lifepoint Ready to Serve</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;1,700&family=Lato:wght@300;400;700&family=Mrs+Saint+Delafield&display=swap">
+<style>
+/* Layout: charcoal brand band, mode switcher, then a phone-width volunteer/referee flow or a full-width admin view. Linen-first, Charcoal for impact. */
+:root{
+  --bg:#FFFBF0; --surface:#FFFFFF; --sunk:#F5F0E2; --ink:#333333; --ink-2:#5E5B55; --ink-3:#86827A; --line:#E7E0CF;
+  --charcoal:#333333; --on-charcoal:#FFFBF0; --on-charcoal-2:#BFCFD7; --badge-ghost:rgba(255,251,240,.07);
+  --blue:#3D6270; --sage:#71806D; --moss:#B1B89F;
+  --btn-bg:#333333; --btn-ink:#FFFBF0;
+  --ok:#5B7656; --ok-bg:#E5EADD; --warn:#9A6E1C; --warn-bg:#F6EAD0; --bad:#A24E3A; --bad-bg:#F5E0D8; --info:#3D6270; --info-bg:#DEE8EB;
+  --font-head:"Jost","Futura","Century Gothic",system-ui,sans-serif;
+  --font-body:"Lato",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-script:"Mrs Saint Delafield","Brush Script MT",cursive;
+  --r-card:22px; --r-field:12px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#242424; --surface:#2F2F2F; --sunk:#2A2A2A; --ink:#FFFBF0; --ink-2:#D3CEC3; --ink-3:#9C978E; --line:#404040;
+  --charcoal:#1B1B1B; --on-charcoal:#FFFBF0; --on-charcoal-2:#BFCFD7; --badge-ghost:rgba(255,251,240,.05);
+  --blue:#9DBDC9; --sage:#B1B89F; --moss:#B1B89F; --btn-bg:#FFFBF0; --btn-ink:#333333;
+  --ok:#AEC6A4; --ok-bg:#2F3A2C; --warn:#E2BC6C; --warn-bg:#3F3524; --bad:#E79D89; --bad-bg:#452C26; --info:#9DBDC9; --info-bg:#26353B;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#242424; --surface:#2F2F2F; --sunk:#2A2A2A; --ink:#FFFBF0; --ink-2:#D3CEC3; --ink-3:#9C978E; --line:#404040;
+  --charcoal:#1B1B1B; --on-charcoal:#FFFBF0; --on-charcoal-2:#BFCFD7; --badge-ghost:rgba(255,251,240,.05);
+  --blue:#9DBDC9; --sage:#B1B89F; --moss:#B1B89F; --btn-bg:#FFFBF0; --btn-ink:#333333;
+  --ok:#AEC6A4; --ok-bg:#2F3A2C; --warn:#E2BC6C; --warn-bg:#3F3524; --bad:#E79D89; --bad-bg:#452C26; --info:#9DBDC9; --info-bg:#26353B;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--font-head);font-weight:500;line-height:1.12;margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.label{font-family:var(--font-body);font-weight:700;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue)}
+.script{font-family:var(--font-script);font-size:40px;line-height:1;color:var(--moss);font-weight:400}
+
+/* top band */
+.band{background:var(--charcoal);color:var(--on-charcoal)}
+.band-in{max-width:1180px;margin:0 auto;padding-block:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.band svg.wordmark{height:22px;width:auto;color:var(--on-charcoal)}
+.band .product{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--on-charcoal-2);font-weight:700}
+
+.wrap{max-width:1180px;margin:0 auto;padding-block:20px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.modes{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.seg{display:inline-flex;background:var(--sunk);border:1px solid var(--line);border-radius:999px;padding:4px;gap:2px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:8px 16px;font-family:var(--font-head);font-weight:500;font-size:15px;cursor:pointer;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-ink)}
+.proto-note{font-size:13px;color:var(--ink-3)}
+
+/* phone column */
+.phone{max-width:430px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+@media (min-width:720px){
+  .phone{background:var(--bg);border:1px solid var(--line);border-radius:40px;padding:18px;box-shadow:0 30px 60px -30px rgba(40,35,25,.25);min-height:760px}
+}
+
+.hero{position:relative;overflow:hidden;background:var(--charcoal);color:var(--on-charcoal);border-radius:var(--r-card);padding:26px 22px 24px;display:flex;flex-direction:column;gap:14px}
+.hero .ghost{position:absolute;right:-60px;bottom:-70px;width:260px;height:260px;color:var(--badge-ghost);pointer-events:none}
+.hero > *:not(.ghost){position:relative}
+.hero h1{font-size:30px}
+.hero p{color:var(--on-charcoal-2);font-size:15.5px}
+.hero .script{color:var(--moss)}
+.hero .badge-sm{width:30px;height:30px;color:var(--on-charcoal)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:999px;padding:13px 22px;font-family:var(--font-head);font-weight:500;font-size:16px;cursor:pointer;background:var(--btn-bg);color:var(--btn-ink);transition:transform .15s ease,opacity .15s}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.35;cursor:not-allowed}
+.btn.light{background:var(--on-charcoal);color:#333333}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn.block{width:100%}
+.btn .arr{font-family:var(--font-body)}
+.link{background:none;border:0;padding:0;color:var(--blue);font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-size:14px}
+.back{background:none;border:0;padding:4px 0;color:var(--ink-2);cursor:pointer;font-size:14px;display:inline-flex;gap:6px;align-items:center;align-self:flex-start}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);padding:20px}
+.card.sunk{background:var(--sunk)}
+.stack{display:flex;flex-direction:column;gap:12px}
+.muted{color:var(--ink-2)}
+.small{font-size:13.5px}
+.quote{font-family:var(--font-head);font-size:19px;line-height:1.35}
+.sig{display:flex;align-items:center;gap:12px;margin-top:12px}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--sage);color:#FFFBF0;display:grid;place-items:center;font-family:var(--font-head);font-weight:500;font-size:15px;flex:none}
+.need li{padding:8px 0;border-top:1px solid var(--line);display:flex;gap:10px}
+.need{list-style:none;margin:0;padding:0}
+.need li:first-child{border-top:0}
+
+/* progress */
+.prog{display:flex;align-items:center;gap:18px}
+.ring{width:76px;height:76px;flex:none}
+.ring circle{fill:none;stroke-width:7}
+.ring .track{stroke:rgba(255,251,240,.14)}
+.ring .val{stroke:var(--moss);stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+.ring text{fill:var(--on-charcoal);font-family:var(--font-head);font-size:17px;font-weight:500}
+
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.step{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:15px 16px;cursor:pointer;transition:border-color .15s,transform .15s}
+.step:hover{border-color:var(--ink-3)}
+.step .t{font-family:var(--font-head);font-weight:500;font-size:17px;display:block}
+.step .m{font-size:13.5px;color:var(--ink-2);display:block}
+.step .body{flex:1;min-width:0}
+.step .chev{color:var(--ink-3);flex:none}
+.ico{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center}
+.ico.done{background:var(--ok);color:var(--bg)}
+.ico.todo{border:2px solid var(--line)}
+.ico.next{border:2px solid var(--blue);box-shadow:inset 0 0 0 5px var(--surface);background:var(--blue)}
+.ico.wait{background:var(--warn-bg);color:var(--warn)}
+.step.is-next{border-color:var(--blue);box-shadow:0 0 0 3px var(--info-bg)}
+
+/* training */
+.video{position:relative;aspect-ratio:16/9;max-width:100%;border-radius:18px;overflow:hidden;background:var(--charcoal);color:var(--on-charcoal);display:flex;flex-direction:column;justify-content:flex-end;padding:16px}
+.video .ghost{position:absolute;right:-30px;top:-20px;width:200px;height:200px;color:var(--badge-ghost)}
+.video .play{position:absolute;inset:0;margin:auto;width:64px;height:64px;border-radius:50%;background:var(--on-charcoal);color:#333;display:grid;place-items:center;border:0;cursor:pointer}
+.video .vt{position:relative;font-family:var(--font-head);font-size:18px}
+.video .vm{position:relative;font-size:12.5px;color:var(--on-charcoal-2)}
+.video .bar{position:absolute;left:0;bottom:0;height:4px;background:var(--moss);transition:width 1.6s linear}
+.chapters{list-style:none;margin:0;padding:0}
+.chapters li{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line);font-size:15px}
+.chapters li:first-child{border-top:0}
+.chapters .n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none;border:1.5px solid var(--line);color:var(--ink-3)}
+.chapters li.done .n{background:var(--ok);border-color:var(--ok);color:var(--bg)}
+.chapters li.cur{font-weight:700}
+.chapters li.cur .n{border-color:var(--blue);color:var(--blue)}
+.chapters .d{margin-left:auto;font-size:12.5px;color:var(--ink-3);font-weight:400}
+.sample{font-size:12.5px;color:var(--ink-3);display:flex;gap:6px;align-items:center}
+.sample::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--warn)}
+
+.qopts{display:flex;flex-direction:column;gap:10px}
+.qopt{text-align:left;border:1.5px solid var(--line);background:var(--surface);border-radius:16px;padding:14px 16px;cursor:pointer;font-size:15.5px;transition:border-color .15s}
+.qopt:hover{border-color:var(--ink-3)}
+.qopt.right{border-color:var(--ok);background:var(--ok-bg)}
+.qopt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.fb{border-radius:14px;padding:12px 14px;font-size:14.5px}
+.fb.ok{background:var(--ok-bg);color:var(--ink)}
+.fb.no{background:var(--bad-bg);color:var(--ink)}
+.dots{display:flex;gap:6px}
+.dots span{height:5px;flex:1;border-radius:3px;background:var(--line)}
+.dots span.on{background:var(--blue)}
+
+/* forms */
+.field{display:flex;flex-direction:column;gap:6px}
+.field label,.field .lbl{font-size:13.5px;font-weight:700;color:var(--ink-2)}
+.field input,.field select,.field textarea{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:var(--r-field);padding:12px 14px;font-size:16px}
+.field textarea{min-height:84px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);outline:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:380px){.row2{grid-template-columns:1fr}}
+.check{display:flex;gap:12px;align-items:flex-start;font-size:15px;cursor:pointer}
+.check input{width:22px;height:22px;accent-color:var(--blue);flex:none;margin-top:1px}
+.choice{display:flex;flex-wrap:wrap;gap:8px}
+.choice label{border:1.5px solid var(--line);border-radius:999px;padding:9px 16px;cursor:pointer;font-size:15px;background:var(--surface)}
+.choice input{position:absolute;opacity:0;pointer-events:none}
+.choice label:has(input:checked){border-color:var(--ink);background:var(--btn-bg);color:var(--btn-ink)}
+.choice label:has(input:focus-visible){outline:2px solid var(--blue);outline-offset:2px}
+
+.code{list-style:none;counter-reset:c;margin:0;padding:0;display:flex;flex-direction:column}
+.code li{counter-increment:c;display:grid;grid-template-columns:34px 1fr;gap:6px;padding:12px 0;border-top:1px solid var(--line);font-size:15px}
+.code li:first-child{border-top:0}
+.code li::before{content:counter(c,decimal-leading-zero);font-family:var(--font-head);color:var(--sage);font-weight:500}
+.code b{font-family:var(--font-head);font-weight:500;font-size:16px;display:block}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border-radius:999px;padding:4px 10px;background:var(--sunk);color:var(--ink-2);border:1px solid var(--line)}
+.pad{position:relative;border:1.5px dashed var(--ink-3);border-radius:16px;background:var(--surface);height:140px;touch-action:none}
+.pad canvas{width:100%;height:100%;display:block;border-radius:16px;cursor:crosshair}
+.pad .hint{position:absolute;left:16px;bottom:12px;font-size:13px;color:var(--ink-3);pointer-events:none}
+.pad .x{position:absolute;left:16px;right:16px;bottom:36px;border-top:1px solid var(--line);pointer-events:none}
+
+.ref{display:flex;flex-direction:column;gap:10px}
+.ref h3{font-size:18px;display:flex;justify-content:space-between;align-items:center}
+.track{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--ink-3);flex-wrap:wrap}
+.track span{display:inline-flex;align-items:center;gap:6px}
+.track span.on{color:var(--ok);font-weight:700}
+.track i{width:18px;height:1px;background:var(--line);display:inline-block}
+
+details.help{border:1px solid var(--line);border-radius:16px;background:var(--sunk);padding:14px 16px}
+details.help summary{cursor:pointer;font-family:var(--font-head);font-weight:500;font-size:16px}
+details.help ol{margin:10px 0 0;padding-left:20px;font-size:14.5px;color:var(--ink-2);display:flex;flex-direction:column;gap:6px}
+
+.record{list-style:none;margin:0;padding:0}
+.record li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid rgba(255,251,240,.12);font-size:14.5px}
+.record li:first-child{border-top:0}
+.record span:last-child{color:var(--on-charcoal-2);text-align:right}
+
+/* confetti */
+.conf{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.conf i{position:absolute;top:-12px;width:8px;height:14px;border-radius:2px;animation:fall 2.4s ease-in forwards}
+@keyframes fall{to{transform:translateY(520px) rotate(540deg);opacity:0}}
+@media (prefers-reduced-motion: reduce){.conf{display:none}.ring .val,.video .bar{transition:none}}
+
+/* email */
+.mail{border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;background:var(--surface)}
+.mail .meta{padding:14px 18px;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink-2);display:flex;flex-direction:column;gap:2px}
+.mail .meta b{color:var(--ink)}
+.mail .top{background:var(--sunk);padding:16px;display:flex;justify-content:center}
+.mail .top svg{height:16px;color:var(--ink);width:auto}
+.mail .content{padding:20px 18px;display:flex;flex-direction:column;gap:12px;font-size:15px}
+
+/* admin */
+.admin{display:flex;flex-direction:column;gap:18px}
+.ahead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.ahead h1{font-size:34px}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:820px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{border-radius:18px;padding:16px 18px;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:4px;text-align:left;cursor:pointer}
+.tile .v{font-family:var(--font-head);font-size:36px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
+.tile .k{font-size:13.5px;color:var(--ink-2);display:flex;align-items:center;gap:8px}
+.tile.dark{background:var(--charcoal);color:var(--on-charcoal);border-color:var(--charcoal)}
+.tile.dark .k{color:var(--on-charcoal-2)}
+.tile[aria-pressed="true"]{outline:2px solid var(--blue);outline-offset:2px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+.dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)} .dot.bad{background:var(--bad)} .dot.info{background:var(--blue)} .dot.none{background:var(--line)}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.tools .field{flex:1;min-width:200px}
+.tools select{width:auto}
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14.5px}
+th{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);font-weight:700;white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--sunk)}
+tbody tr:last-child td{border-bottom:0}
+td .who{font-family:var(--font-head);font-weight:500;font-size:16px}
+td .sub{font-size:12.5px;color:var(--ink-3)}
+.cell{display:inline-flex;align-items:center;gap:7px;font-size:13.5px}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 11px;font-size:12.5px;font-weight:700}
+.pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.info{background:var(--info-bg);color:var(--info)}
+.empty{padding:28px;text-align:center;color:var(--ink-3)}
+
+.scrim{position:fixed;inset:0;background:rgba(20,20,20,.45);z-index:40}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--bg);z-index:41;overflow-y:auto;border-left:1px solid var(--line);padding:calc(22px + env(safe-area-inset-top,0px)) max(22px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) 22px;display:flex;flex-direction:column;gap:16px;animation:slide .25s ease}
+@keyframes slide{from{transform:translateX(30px);opacity:0}}
+.drawer h2{font-size:28px}
+.kv{list-style:none;margin:0;padding:0}
+.kv li{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;padding:11px 0;border-top:1px solid var(--line);font-size:14.5px}
+.kv li:first-child{border-top:0}
+.kv .when{font-size:12.5px;color:var(--ink-3);text-align:right}
+.private{border-radius:16px;padding:14px 16px;background:var(--bad-bg);font-size:14.5px;display:flex;flex-direction:column;gap:6px}
+.private .label{color:var(--bad)}
+.actions{display:flex;flex-direction:column;gap:10px}
+
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--btn-bg);color:var(--btn-ink);padding:12px 20px;border-radius:999px;font-size:14.5px;z-index:60;box-shadow:0 10px 30px rgba(0,0,0,.2);max-width:calc(100% - 32px);text-align:center}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="badge" viewBox="0 0 500 500"><path fill="currentColor" d="M147.34,100.24c-26.2,27.72-98.66,99.18-117.920,118.14-3.04,2.99-4.75,7.11-4.75,11.42v228.99h28.37c57.380,0,103.91-47.35,103.96-105.79l.2-248.71c0-5.25-6.27-7.82-9.85-4.04Z"/><path fill="currentColor" d="M193.77,43.01c-3.64-3.78-10.03-1.21-10.03,4.04v306.06c.31,58.25,49.26,105.67,107.52,105.67h25V174.78c0-4.16-1.63-8.16-4.55-11.13-18.87-19.2-91.18-92.84-117.94-120.64Z"/><path fill="currentColor" d="M352.84,228.68c-3.64-3.78-10.03-1.21-10.03,4.04v126.58c0,54.95,44.55,99.5,99.5,99.5h33.03v-98.35c0-4.16-1.63-8.16-4.55-11.130-18.87-19.2-91.18-92.84-117.94-120.64Z"/></symbol>
+  <symbol id="wordmark" viewBox="0 0 910 117"><g fill="currentColor"><path d="M157.18,62.21v38.13h13.09v6.41h-19.9v-44.54h6.81Z"/><path d="M200.39,62.21v44.54h-6.81v-44.54h6.81Z"/><path d="M248.31,68.62h-15.49v11.29h14.96v6.41h-14.96v20.44h-6.81v-44.54h22.31v6.41Z"/><path d="M294.57,68.62h-17.76v11.29h17.23v6.41h-17.23v14.02h17.76v6.41h-24.58v-44.54h24.58v6.41Z"/><path d="M327.13,62.21c2.74,0,6.54.27,9.75,2.4,3.74,2.47,5.54,6.75,5.54,10.82,0,2.6-.67,6.61-4.34,9.75-3.54,3.01-7.61,3.470-10.89,3.47h-3.07v18.1h-6.81v-44.54h9.82ZM324.13,82.38h3.07c5.88,0,8.68-2.87,8.68-7.01,0-2.47-1-6.88-8.75-6.88h-3.01v13.89Z"/><path d="M407.52,84.52c0,13.09-9.82,23.11-23.17,23.11s-23.17-10.02-23.17-23.11,9.82-23.11,23.17-23.11,23.17,10.02,23.17,23.11ZM400.71,84.52c0-9.88-6.81-16.83-16.36-16.83s-16.36,6.95-16.36,16.830,6.81,16.83,16.36,16.83,16.36-6.95,16.36-16.83Z"/><path d="M433.85,62.21v44.54h-6.81v-44.54h6.81Z"/><path d="M460.45,106.76v-47.55l32.32,33.86v-30.85h6.81v47.28l-32.32-33.86v31.12h-6.81Z"/><path d="M538.53,68.62v38.13h-6.81v-38.13h-10.22v-6.41h27.25v6.41h-10.22Z"/><path d="M618.07,70.92c-3.92-4.6-9.55-7.21-15.45-7.21-11.75,0-20.54,9.41-20.54,21.02,0,13.6,11.33,20.67,20.61,20.67,4.6,0,10.72-1.85,15.39-6.94v3.98c-4.67,4.12-10.3,5.7-15.25,5.7-13.74,0-23.9-10.78-23.9-23.56s10.58-23.63,23.77-23.63c8.72,0,14.01,4.67,15.39,5.98v3.98Z"/><path d="M644.15,81.01h27.75v-19.44h3.02v45.81h-3.02v-23.63h-27.75v23.63h-3.020v-45.81h3.02v19.44Z"/><path d="M704.48,61.57v28.64c0,4.33.21,7.14,1.92,9.89,2.68,4.33,7.69,5.29,10.65,5.29s7.97-.96,10.65-5.29c1.72-2.75,1.92-5.56,1.92-9.89v-28.64h3.02v28.64c0,5.01-.27,8.31-2.61,11.75-3.43,5.01-8.86,6.18-12.98,6.18s-9.55-1.17-12.98-6.18c-2.34-3.43-2.61-6.73-2.61-11.75v-28.64h3.02Z"/><path d="M779.38,107.39l-14.84-21.64h-1.37v21.64h-3.02v-45.81h6.59c3.5,0,6.66.27,9.68,2.34,3.57,2.47,4.74,6.25,4.74,9.82,0,4.53-1.99,9.2-7.69,11.13-2.4.82-4.6.89-5.63.89l14.97,21.64h-3.43ZM763.17,83.01h4.4c6.53,0,10.44-3.43,10.44-9.34,0-4.6-2.27-7.01-4.05-7.97-1.920-1.1-5.22-1.37-7.01-1.37h-3.78v18.68Z"/><path d="M844.13,70.92c-3.92-4.6-9.55-7.21-15.45-7.21-11.75,0-20.54,9.41-20.54,21.02,0,13.6,11.33,20.67,20.61,20.67,4.6,0,10.72-1.85,15.39-6.94v3.98c-4.67,4.12-10.3,5.7-15.25,5.7-13.74,0-23.9-10.78-23.9-23.56s10.58-23.63,23.77-23.63c8.72,0,14.01,4.67,15.39,5.98v3.98Z"/><path d="M870.22,81.01h27.75v-19.44h3.02v45.81h-3.02v-23.63h-27.75v23.63h-3.02v-45.81h3.02v19.44Z"/><path d="M38.97,21.92c-6.4,6.77-24.1,24.22-28.8,28.86-.74.73-1.16,1.74-1.16,2.79v55.93h6.93c14.01,0,25.38-11.57,25.39-25.84l.05-60.74c0-1.28-1.53-1.91-2.41-.99Z"/><path d="M50.31,7.95c-.89-.92-2.45-.3-2.45.99v74.75c.08,14.23,12.03,25.81,26.26,25.81h6.11V40.13c0-1.02-.4-1.99-1.11-2.72-4.61-4.69-22.27-22.67-28.81-29.46Z"/><path d="M89.16,53.29c-.89-.92-2.45-.3-2.45.99v30.91c0,13.42,10.88,24.3,24.3,24.3h8.07v-24.02c0-1.02-.4-1.99-1.11-2.72-4.61-4.69-22.27-22.67-28.81-29.46Z"/></g></symbol>
+</svg>
+
+<header class="band"><div class="band-in">
+  <svg class="wordmark" viewBox="0 0 910 117" role="img" aria-label="Lifepoint Church"><use href="#wordmark"/></svg>
+  <span class="product">Ready to Serve</span>
+</div></header>
+
+<main class="wrap">
+  <div class="modes">
+    <div class="seg" role="group" aria-label="Choose whose view to see">
+      <button type="button" data-mode="volunteer" aria-pressed="true">Volunteer</button>
+      <button type="button" data-mode="referee" aria-pressed="false">Referee</button>
+      <button type="button" data-mode="admin" aria-pressed="false">Admin</button>
+    </div>
+    <p class="proto-note">Clickable prototype · sample people and content · nothing is saved</p>
+  </div>
+  <div id="view"></div>
+</main>
+<div id="layer"></div>
+
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const view = $('#view'), layer = $('#layer');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const badge = (cls='') => `<svg class="${cls}" viewBox="0 0 500 500" aria-hidden="true"><use href="#badge"/></svg>`;
+const wordmark = () => `<svg viewBox="0 0 910 117" role="img" aria-label="Lifepoint Church"><use href="#wordmark"/></svg>`;
+const tick = `<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.4l2.6 2.6L11 4.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const clock = `<svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4.8V8l2.2 1.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+const chev = `<svg class="chev" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M7 4l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const lock = `<svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" fill="currentColor"/><path d="M4.5 6V4.5a2.5 2.5 0 015 0V6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`;
+
+function toast(msg){
+  document.querySelectorAll('.toast').forEach(x=>x.remove());
+  const t = document.createElement('div'); t.className='toast'; t.setAttribute('role','status'); t.textContent=msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(), 2800);
+}
+
+/* ---------------- state ---------------- */
+const fresh = () => ({
+  screen:'welcome',
+  steps:{details:'done', training:'todo', conduct:'todo', referees:'todo', bluecard:'todo'},
+  chapter:0, playing:false, q:0, picked:null,
+  refs:[{name:'Mark Davies', email:'mark.davies@example.com', rel:'Former team leader', yrs:'5+ years', st:0},
+        {name:'Jenny Wallace', email:'jenny.wallace@example.com', rel:'Work colleague', yrs:'2–5 years', st:0}],
+  blue:{num:'1234567/2', exp:'2028-08-31'},
+  signedOn:null
+});
+let S = fresh();
+let mode = 'volunteer';
+let R = {screen:'email'};
+let A = {filter:'all', q:'', ministry:'All ministries', open:null};
+
+const STEPS = [
+  {id:'details', t:'Your details', m:'Name, phone, emergency contact'},
+  {id:'training', t:'Safe Volunteers training', m:'5 short videos and a quiz · about 45 min'},
+  {id:'conduct', t:'Code of conduct', m:'Read and sign · 5 min'},
+  {id:'referees', t:'Two referees', m:'We email them a 2-minute form'},
+  {id:'bluecard', t:'Blue Card', m:'Add your card, or get help applying'}
+];
+const CHAPTERS = [
+  ['Why we keep children safe','6 min'],['Recognising signs of harm','9 min'],
+  ['Our safe practices','11 min'],['When a child tells you something','8 min'],['Reporting a concern','7 min']
+];
+const QUIZ = [
+  {q:'A child tells you something that worries you. What do you do first?',
+   o:['Promise to keep it a secret so they keep talking','Listen calmly, reassure them, and don’t ask leading questions','Ask their parents about it at pickup'], a:1,
+   why:'Stay calm and listen. Don’t promise secrecy, and don’t investigate. Your job is to listen, then report.'},
+  {q:'Which of these follows the two-adult rule?',
+   o:['Taking one child to the bathroom on your own','Staying in view of another leader whenever you’re with children','Messaging a child privately to check how they are'], a:1,
+   why:'Always stay visible to another adult. Doors open, other leaders in sight, and no private messages.'},
+  {q:'Who do you tell about a concern, and when?',
+   o:['Your ministry leader or the child safety officer, the same day','Nobody, unless it happens again','Only the police'], a:0,
+   why:'Tell your ministry leader or the child safety officer the same day. If a child is in immediate danger, call 000 first.'}
+];
+const doneCount = () => STEPS.filter(s => S.steps[s.id]==='done').length;
+const nextStep = () => STEPS.find(s => S.steps[s.id]==='todo');
+const fmtDate = iso => { if(!iso) return '—'; const d=new Date(iso+'T00:00:00'); return d.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}); };
+
+/* ---------------- volunteer ---------------- */
+function vWelcome(){
+  return `<div class="phone">
+    <section class="hero">${badge('ghost')}
+      ${badge('badge-sm')}
+      <span class="script">here to serve</span>
+      <h1>Welcome to the Kids team, Sarah.</h1>
+      <p>Before your first Sunday there are five quick steps. They keep our kids safe and help you serve with confidence. Most people finish in about an hour, and you can stop and come back any time.</p>
+      <div><button class="btn light" data-go="home">Let’s get started <span class="arr">→</span></button></div>
+    </section>
+    <section class="card">
+      <p class="quote">“Thank you for saying yes to serving our kids. These steps are how we make Lifepoint a safe place for every family who walks through the door.”</p>
+      <div class="sig"><span class="avatar">DS</span><div><b>Dan Sweetman</b><div class="small muted">Senior Pastor</div></div></div>
+    </section>
+    <section class="card sunk stack">
+      <span class="label">Have these handy</span>
+      <ul class="need">
+        <li><span>🪪</span><span>Your Blue Card number, or 10 minutes to apply for one (free for volunteers)</span></li>
+        <li><span>👥</span><span>Names and emails of two people who’ve known you 2+ years and aren’t family</span></li>
+        <li><span>🎧</span><span>About 45 minutes for the training videos. Headphones help.</span></li>
+      </ul>
+    </section>
+  </div>`;
+}
+
+function vHome(){
+  const n = doneCount(), C = 2*Math.PI*30, nxt = nextStep();
+  const waiting = STEPS.filter(s=>S.steps[s.id]==='wait').length;
+  const msg = n===5 ? 'All done.' : nxt ? `Next up: ${nxt.t.toLowerCase()}.` : 'Nearly there. We’re waiting on a couple of things.';
+  return `<div class="phone">
+    <section class="hero">${badge('ghost')}
+      <div class="prog">
+        <svg class="ring" viewBox="0 0 76 76" role="img" aria-label="${n} of 5 steps done">
+          <circle class="track" cx="38" cy="38" r="30"/>
+          <circle class="val" cx="38" cy="38" r="30" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-n/5)}" transform="rotate(-90 38 38)"/>
+          <text x="38" y="44" text-anchor="middle">${n}/5</text>
+        </svg>
+        <div class="stack" style="gap:6px">
+          <h1 style="font-size:26px">Hi Sarah</h1>
+          <p>${msg}${waiting? ' We’ll let you know when the others are through.':''}</p>
+        </div>
+      </div>
+    </section>
+    <ul class="steps">
+      ${STEPS.map(s=>{
+        const st=S.steps[s.id], isNext = nxt && nxt.id===s.id;
+        const ico = st==='done' ? `<span class="ico done">${tick}</span>` : st==='wait' ? `<span class="ico wait">${clock}</span>` : `<span class="ico ${isNext?'next':'todo'}"></span>`;
+        let meta = s.m;
+        if(st==='done' && s.id==='training') meta='Completed · certificate saved';
+        if(st==='done' && s.id==='conduct') meta=`Signed ${S.signedOn||'today'} · version 2026.1`;
+        if(st==='done' && s.id==='referees') meta='Both referees have replied';
+        if(st==='done' && s.id==='bluecard') meta=`Verified · expires ${fmtDate(S.blue.exp)}`;
+        if(st==='done' && s.id==='details') meta='Sarah Mitchell · 0412 345 678';
+        if(st==='wait' && s.id==='referees') meta=`${S.refs.filter(r=>r.st===3).length} of 2 replied · we’ll chase them for you`;
+        if(st==='wait' && s.id==='bluecard') meta='Sent to the office to check in the Blue Card portal';
+        return `<li><button class="step ${isNext?'is-next':''}" data-step="${s.id}">${ico}<span class="body"><span class="t">${s.t}</span><span class="m">${meta}</span></span>${chev}</button></li>`;
+      }).join('')}
+    </ul>
+    ${S.steps.bluecard==='wait' ? `<p class="small muted" style="text-align:center">Prototype shortcut: <button class="link" data-act="verify-self">pretend the office verified it</button></p>`:''}
+    <p class="small muted" style="text-align:center">Stuck? Reply to your welcome email and the office will help.</p>
+  </div>`;
+}
+
+function vTraining(){
+  const ch = S.chapter;
+  if(ch >= CHAPTERS.length) return vQuiz();
+  const [title,dur] = CHAPTERS[ch];
+  return `<div class="phone">
+    <button class="back" data-go="home">← Your steps</button>
+    <div class="stack" style="gap:4px"><span class="label">Safe Volunteers · Level 2</span><h2 style="font-size:26px">Chapter ${ch+1}: ${title}</h2></div>
+    <div class="video">${badge('ghost')}
+      <button class="play" data-act="play" aria-label="Play chapter">${S.playing?'<svg width="20" height="20" viewBox="0 0 20 20"><rect x="5" y="4" width="3.5" height="12" rx="1" fill="currentColor"/><rect x="11.5" y="4" width="3.5" height="12" rx="1" fill="currentColor"/></svg>':'<svg width="22" height="22" viewBox="0 0 22 22"><path d="M7 4.5v13l11-6.5z" fill="currentColor"/></svg>'}</button>
+      <span class="vt">${title}</span><span class="vm">${dur} · captions on</span>
+      <span class="bar" style="width:${S.playing?'100%':'0%'}"></span>
+    </div>
+    <p class="sample">Sample chapter. Your own training videos go here.</p>
+    <section class="card"><ul class="chapters">
+      ${CHAPTERS.map((c,i)=>`<li class="${i<ch?'done':i===ch?'cur':''}"><span class="n">${i<ch?tick:i+1}</span>${c[0]}<span class="d">${c[1]}</span></li>`).join('')}
+      <li><span class="n">?</span>Quick quiz<span class="d">3 questions</span></li>
+    </ul></section>
+    <button class="btn block" data-act="chapter" ${S.playing?'':'disabled'}>${ch===CHAPTERS.length-1?'Finish and take the quiz':'Next chapter'} <span class="arr">→</span></button>
+    ${S.playing?'':'<p class="small muted" style="text-align:center">Press play to unlock the next chapter.</p>'}
+  </div>`;
+}
+
+function vQuiz(){
+  const Q = QUIZ[S.q], p = S.picked;
+  return `<div class="phone">
+    <button class="back" data-go="home">← Your steps</button>
+    <div class="dots" aria-hidden="true">${QUIZ.map((_,i)=>`<span class="${i<=S.q?'on':''}"></span>`).join('')}</div>
+    <span class="label">Question ${S.q+1} of ${QUIZ.length}</span>
+    <h2 style="font-size:24px">${Q.q}</h2>
+    <div class="qopts">${Q.o.map((o,i)=>{
+      let c=''; if(p!==null){ if(i===p) c = i===Q.a?'right':'wrong'; }
+      return `<button class="qopt ${c}" data-pick="${i}">${o}</button>`; }).join('')}</div>
+    ${p===null?'':p===Q.a?`<div class="fb ok"><b>That’s right.</b> ${Q.why}</div>`:`<div class="fb no"><b>Not quite. Have another go.</b></div>`}
+    <button class="btn block" data-act="qnext" ${p===Q.a?'':'disabled'}>${S.q===QUIZ.length-1?'Finish training':'Next question'} <span class="arr">→</span></button>
+  </div>`;
+}
+
+function vConduct(){
+  return `<div class="phone">
+    <button class="back" data-go="home">← Your steps</button>
+    <div class="stack" style="gap:6px"><span class="label">Code of conduct</span><h2 style="font-size:26px">How we serve children at Lifepoint</h2>
+    <div><span class="chip">Version 2026.1 · updated October 2026</span></div></div>
+    <section class="card"><ol class="code">
+      <li><span><b>Stay visible</b>Be in sight of another adult whenever you’re with children.</span></li>
+      <li><span><b>Never one-on-one</b>Not behind a closed door, in a car, or online.</span></li>
+      <li><span><b>Safe touch only</b>High fives and side hugs. No children on laps.</span></li>
+      <li><span><b>Official channels</b>No private messages or social media contact with children.</span></li>
+      <li><span><b>Speak up the same day</b>Take every concern seriously and tell your leader or the child safety officer.</span></li>
+      <li><span><b>Protect privacy</b>No photos of children on your personal phone.</span></li>
+      <li><span><b>Keep us informed</b>Tell us straight away if your Blue Card status changes.</span></li>
+    </ol>
+    <p class="sample" style="margin-top:8px">Sample wording. Your real code of conduct goes here.</p></section>
+    <div class="field"><label for="cname">Your full name</label><input id="cname" autocomplete="name" value="Sarah Mitchell"></div>
+    <div class="field"><span class="lbl">Sign with your finger or mouse</span>
+      <div class="pad"><canvas id="sigpad" aria-label="Signature area"></canvas><span class="x"></span><span class="hint" id="sighint">Sign here</span></div>
+      <div><button class="link" data-act="clearsig">Clear signature</button></div></div>
+    <label class="check"><input type="checkbox" id="cagree"> I have read Lifepoint’s code of conduct and agree to follow it while I serve.</label>
+    <button class="btn block" id="signbtn" data-act="sign" disabled>Sign the code of conduct</button>
+  </div>`;
+}
+
+function vReferees(){
+  const sent = S.steps.referees!=='todo';
+  const track = r => {
+    const labels=['Email sent','Opened','Replied'];
+    return `<div class="track">${labels.map((l,i)=>`${i?'<i></i>':''}<span class="${r.st>i?'on':''}">${r.st>i?tick:''}${l}</span>`).join('')}</div>`;
+  };
+  return `<div class="phone">
+    <button class="back" data-go="home">← Your steps</button>
+    <div class="stack" style="gap:6px"><span class="label">Referees</span><h2 style="font-size:26px">Two people who know you well</h2>
+    <p class="muted">They need to have known you for at least two years and can’t be family. We’ll email them a 2-minute form and chase them for you.</p></div>
+    ${S.refs.map((r,i)=>`<section class="card ref">
+      <h3>Referee ${i+1} ${sent && r.st===3?'<span class="pill ok">Done</span>':''}</h3>
+      ${sent ? `<div><b>${esc(r.name)}</b><div class="small muted">${esc(r.rel)} · known ${esc(r.yrs)}</div></div>${track(r)}` : `
+      <div class="field"><label for="rn${i}">Name</label><input id="rn${i}" value="${esc(r.name)}"></div>
+      <div class="field"><label for="re${i}">Email</label><input id="re${i}" type="email" value="${esc(r.email)}"></div>
+      <div class="row2">
+        <div class="field"><label for="rr${i}">How you know them</label><select id="rr${i}">${['Former team leader','Work colleague','Friend','Community or sport','Other'].map(o=>`<option ${o===r.rel?'selected':''}>${o}</option>`).join('')}</select></div>
+        <div class="field"><label for="ry${i}">For how long</label><select id="ry${i}">${['2–5 years','5+ years'].map(o=>`<option ${o===r.yrs?'selected':''}>${o}</option>`).join('')}</select></div>
+      </div>`}
+    </section>`).join('')}
+    ${sent ? `<p class="small muted" style="text-align:center">Want to see what Mark receives? Open the <button class="link" data-mode-go="referee">Referee view</button>.</p>
+              <button class="btn ghost block" data-go="home">Back to your steps</button>`
+           : `<button class="btn block" data-act="sendrefs">Send referee requests <span class="arr">→</span></button>`}
+  </div>`;
+}
+
+function vBlue(){
+  const sent = S.steps.bluecard!=='todo';
+  return `<div class="phone">
+    <button class="back" data-go="home">← Your steps</button>
+    <div class="stack" style="gap:6px"><span class="label">Blue Card</span><h2 style="font-size:26px">Your Blue Card</h2>
+    <p class="muted">Queensland law says you need a Blue Card before you serve with children. We check it in the Blue Card Services portal, so nobody needs to photocopy anything.</p></div>
+    ${sent ? `<section class="card stack"><div class="cell"><span class="pill ${S.steps.bluecard==='done'?'ok':'warn'}">${S.steps.bluecard==='done'?'Verified':'Waiting for the office to check'}</span></div>
+      <div><b>Card ${esc(S.blue.num)}</b><div class="small muted">Expires ${fmtDate(S.blue.exp)}</div></div>
+      <p class="small muted">The office usually checks within two working days. We’ll remind you 60 days before it expires.</p></section>
+      <button class="btn ghost block" data-go="home">Back to your steps</button>`
+    : `<section class="card stack">
+      <div class="row2">
+        <div class="field"><label for="bnum">Card number</label><input id="bnum" inputmode="numeric" value="${esc(S.blue.num)}"></div>
+        <div class="field"><label for="bexp">Expiry date</label><input id="bexp" type="date" value="${esc(S.blue.exp)}"></div>
+      </div>
+      <label class="check"><input type="checkbox" id="blink" checked> I’ve added Lifepoint Church as an organisation in my Blue Card account.</label>
+    </section>
+    <details class="help"><summary>No Blue Card yet? Here’s how</summary><ol>
+      <li>Go to the Blue Card Services website and choose “Apply for a volunteer card”. It’s free for volunteers.</li>
+      <li>Name Lifepoint Church as your organisation when you apply.</li>
+      <li>Verify your identity at a Queensland Government service centre or online.</li>
+      <li>Come back here and add your card number when it arrives.</li>
+    </ol></details>
+    <button class="btn block" data-act="sendblue">Send for checking <span class="arr">→</span></button>`}
+  </div>`;
+}
+
+function vCleared(){
+  const exp = new Date(); exp.setFullYear(exp.getFullYear()+1);
+  return `<div class="phone">
+    <section class="hero" style="padding-top:34px">${badge('ghost')}<div class="conf" id="conf"></div>
+      ${badge('badge-sm')}
+      <span class="script">you’re ready</span>
+      <h1 style="font-size:34px">You’re cleared to serve.</h1>
+      <p>Welcome to the Kids team, Sarah. Your ministry leader can now add you to the roster in ChurchSuite.</p>
+      <ul class="record">
+        <li><span>Safe Volunteers training</span><span>Refresher due ${exp.toLocaleDateString('en-AU',{month:'short',year:'numeric'})}</span></li>
+        <li><span>Code of conduct</span><span>Signed · v2026.1</span></li>
+        <li><span>Referees</span><span>2 of 2 replied</span></li>
+        <li><span>Blue Card</span><span>Expires ${fmtDate(S.blue.exp)}</span></li>
+      </ul>
+    </section>
+    <button class="btn ghost block" data-go="home">See my steps</button>
+    <button class="link" style="align-self:center" data-act="restart">Restart the prototype</button>
+  </div>`;
+}
+
+function confetti(){
+  const box = $('#conf'); if(!box || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cols=['#B1B89F','#BFCFD7','#FFFBF0','#71806D','#3D6270'];
+  for(let i=0;i<40;i++){ const c=document.createElement('i'); c.style.left=Math.random()*100+'%'; c.style.background=cols[i%cols.length]; c.style.animationDelay=(Math.random()*.6)+'s'; box.appendChild(c); }
+}
+
+function setupPad(){
+  const cv = $('#sigpad'); if(!cv) return;
+  const dpr = window.devicePixelRatio||1, r = cv.getBoundingClientRect();
+  cv.width = r.width*dpr; cv.height = r.height*dpr;
+  const g = cv.getContext('2d'); g.scale(dpr,dpr);
+  g.lineWidth=2.4; g.lineCap='round'; g.lineJoin='round';
+  g.strokeStyle = getComputedStyle(document.body).color;
+  let draw=false, has=false, lx=0, ly=0;
+  const pos = e => { const b=cv.getBoundingClientRect(); return [e.clientX-b.left, e.clientY-b.top]; };
+  cv.onpointerdown = e => { draw=true; [lx,ly]=pos(e); cv.setPointerCapture(e.pointerId); };
+  cv.onpointermove = e => { if(!draw) return; const [x,y]=pos(e); g.beginPath(); g.moveTo(lx,ly); g.lineTo(x,y); g.stroke(); lx=x; ly=y;
+    if(!has){ has=true; $('#sighint').hidden=true; check(); } };
+  cv.onpointerup = cv.onpointercancel = () => draw=false;
+  const check = () => { $('#signbtn').disabled = !(has && $('#cagree').checked && $('#cname').value.trim()); };
+  $('#cagree').onchange = check; $('#cname').oninput = check;
+  cv._clear = () => { g.clearRect(0,0,cv.width,cv.height); has=false; $('#sighint').hidden=false; check(); };
+}
+
+function renderVolunteer(){
+  if(S.screen==='home' && doneCount()===5 && !S.celebrated){ S.celebrated=true; S.screen='cleared'; }
+  const map = {welcome:vWelcome, home:vHome, training:vTraining, conduct:vConduct, referees:vReferees, bluecard:vBlue, cleared:vCleared};
+  view.innerHTML = map[S.screen]();
+  if(S.screen==='conduct') setupPad();
+  if(S.screen==='cleared') confetti();
+}
+
+/* ---------------- referee ---------------- */
+function renderReferee(){
+  if(R.screen==='email'){
+    view.innerHTML = `<div class="phone">
+      <span class="label">What Mark sees in his inbox</span>
+      <article class="mail">
+        <div class="meta"><span><b>Lifepoint Church</b></span><span>Subject: Sarah Mitchell has named you as a referee</span></div>
+        <div class="top">${wordmark()}</div>
+        <div class="content">
+          <p>Hi Mark,</p>
+          <p>Sarah Mitchell would like to volunteer with children at Lifepoint Church, and she’s named you as someone who knows her well.</p>
+          <p>Could you answer five quick questions? It takes about two minutes, and your answers are private. Only our senior pastor and child safety officer can see them.</p>
+          <div><button class="btn" data-ract="open">Answer 5 quick questions <span class="arr">→</span></button></div>
+          <p class="small muted">Thank you for helping us keep our kids safe.<br>Lifepoint Church · Rothwell and Caboolture West</p>
+        </div>
+      </article>
+    </div>`;
+    return;
+  }
+  if(R.screen==='thanks'){
+    view.innerHTML = `<div class="phone"><section class="hero">${badge('ghost')}${badge('badge-sm')}
+      <span class="script">thank you</span><h1>That’s all, Mark.</h1>
+      <p>Your answers have gone privately to Lifepoint’s child safety team. Thanks for helping us keep our kids safe.</p></section>
+      <button class="link" style="align-self:center" data-ract="reset">Start the referee view again</button></div>`;
+    return;
+  }
+  view.innerHTML = `<div class="phone">
+    <section class="hero" style="gap:8px">${badge('ghost')}<span class="label" style="color:var(--on-charcoal-2)">Referee for Sarah Mitchell</span>
+      <h1 style="font-size:26px">Five quick questions</h1><p>About 2 minutes. Only our senior pastor and child safety officer will see your answers.</p></section>
+    <form id="rform" class="stack" style="gap:18px" novalidate>
+      <div class="field"><label for="q1">1. How do you know Sarah?</label>
+        <select id="q1"><option>I led a team she served on</option><option>We work together</option><option>Friend</option><option>Community or sport</option><option>Other</option></select></div>
+      <div class="field"><label for="q1b">For how long?</label>
+        <select id="q1b"><option>Less than 2 years</option><option>2–5 years</option><option selected>More than 5 years</option></select></div>
+      <div class="field"><span class="lbl">2. Have you seen Sarah with children or young people?</span>
+        <div class="choice"><label><input type="radio" name="q2" checked>Yes</label><label><input type="radio" name="q2">No</label><label><input type="radio" name="q2">Not sure</label></div></div>
+      <div class="field"><span class="lbl">3. Would you be comfortable with Sarah caring for children in your own family?</span>
+        <div class="choice"><label><input type="radio" name="q3" checked>Yes</label><label><input type="radio" name="q3">With some hesitation</label><label><input type="radio" name="q3">No</label></div></div>
+      <div class="field"><span class="lbl">4. Do you know of anything that would make Sarah unsuitable to work with children?</span>
+        <div class="choice"><label><input type="radio" name="q4" value="no" checked>No</label><label><input type="radio" name="q4" value="yes">Yes, or I’m not sure</label></div>
+        <div id="q4more" hidden class="stack" style="margin-top:8px">
+          <textarea id="q4t" aria-label="Tell us more" placeholder="Tell us as much as you’re comfortable sharing."></textarea>
+          <label class="check"><input type="checkbox" checked> Please have someone call me</label>
+          <p class="small muted">This goes straight to Pastor Dan and the child safety officer, and nobody else.</p>
+        </div></div>
+      <div class="field"><label for="q5">5. Anything else you’d like us to know? (optional)</label><textarea id="q5"></textarea></div>
+      <label class="check"><input type="checkbox" id="rtrue" checked> What I’ve said is true to the best of my knowledge.</label>
+      <button class="btn block" type="submit">Send my answers</button>
+    </form></div>`;
+  const f = $('#rform');
+  f.querySelectorAll('input[name=q4]').forEach(r => r.onchange = () => { $('#q4more').hidden = f.querySelector('input[name=q4]:checked').value!=='yes'; });
+  f.onsubmit = e => { e.preventDefault();
+    if(!$('#rtrue').checked){ toast('Please tick the last box to confirm your answers.'); return; }
+    R.screen='thanks'; render(); window.scrollTo({top:0});
+    if(S.refs[0].st<3 && S.steps.referees!=='todo'){ S.refs[0].st=3; refsCheck(); }
+  };
+}
+
+/* ---------------- admin ---------------- */
+const PEOPLE = [
+  {n:'James Okafor', m:'Youth', tr:'done', cc:'done', rf:'done', bc:'ok', exp:'2028-05-02', ago:'Cleared 3 Feb 2026'},
+  {n:'Priya Nair', m:'Crèche', tr:'done', cc:'done', rf:'done', bc:'ok', exp:'2026-12-24', ago:'Cleared 9 Mar 2024'},
+  {n:'Tom Brennan', m:'Kids', tr:'done', cc:'done', rf:'wait', bc:'check', exp:'2029-01-15', ago:'Started 6 Nov 2026'},
+  {n:'Grace Liu', m:'Kids', tr:'done', cc:'done', rf:'done', bc:'ok', exp:'2027-09-30', ago:'Cleared 21 Jul 2025'},
+  {n:'Matt Russo', m:'Youth', tr:'todo', cc:'todo', rf:'todo', bc:'todo', exp:'', ago:'Invited 10 Nov 2026'},
+  {n:'Hannah Cole', m:'Crèche', tr:'done', cc:'done', rf:'flag', bc:'ok', exp:'2028-02-11', ago:'Started 28 Oct 2026'},
+  {n:'Ben Tran', m:'Kids', tr:'done', cc:'done', rf:'done', bc:'expired', exp:'2026-11-02', ago:'Cleared 4 Oct 2023'},
+  {n:'Olivia Hart', m:'Youth', tr:'done', cc:'done', rf:'done', bc:'ok', exp:'2027-04-18', ago:'Cleared 12 Jan 2025'},
+  {n:'Leah Wright', m:'Kids', tr:'done', cc:'done', rf:'done', bc:'ok', exp:'2027-01-06', ago:'Cleared 30 Aug 2024'},
+  {n:'Sam Patel', m:'Youth', tr:'progress', cc:'todo', rf:'todo', bc:'todo', exp:'', ago:'Started 12 Nov 2026'},
+  {n:'Ruth Adeyemi', m:'Crèche', tr:'done', cc:'done', rf:'done', bc:'ok', exp:'2029-06-01', ago:'Cleared 2 Sep 2026'}
+];
+const TODAY = new Date('2026-11-14T00:00:00');
+const daysTo = iso => Math.round((new Date(iso+'T00:00:00') - TODAY)/864e5);
+
+function sarahRow(){
+  const st=S.steps;
+  return {n:'Sarah Mitchell', m:'Kids', live:true,
+    tr: st.training==='done'?'done': (S.chapter>0?'progress':'todo'),
+    cc: st.conduct==='done'?'done':'todo',
+    rf: st.referees==='done'?'done': st.referees==='wait'?'wait':'todo',
+    bc: st.bluecard==='done'?'ok': st.bluecard==='wait'?'check':'todo',
+    exp: st.bluecard==='todo'?'':S.blue.exp, ago: doneCount()===5?'Cleared today':'Started today'};
+}
+function overall(p){
+  if(p.rf==='flag') return {k:'flag', t:'Needs attention', c:'bad'};
+  if(p.bc==='expired') return {k:'flag', t:'Blue Card expired', c:'bad'};
+  const all = p.tr==='done' && p.cc==='done' && p.rf==='done' && p.bc==='ok';
+  if(all && p.exp && daysTo(p.exp)<=60) return {k:'expiring', t:`Expires in ${daysTo(p.exp)} days`, c:'warn'};
+  if(all) return {k:'cleared', t:'Cleared', c:'ok'};
+  return {k:'progress', t:'In progress', c:'info'};
+}
+const cell = (v) => {
+  const m = {done:['ok','Done'], progress:['info','Started'], todo:['none','Not yet'], wait:['warn','Waiting'], flag:['bad','Concern'],
+             ok:['ok','Verified'], check:['warn','To check'], expired:['bad','Expired']}[v];
+  return `<span class="cell"><span class="dot ${m[0]}"></span>${m[1]}</span>`;
+};
+
+function renderAdmin(){
+  const people = [sarahRow(), ...PEOPLE].map(p=>({...p, o:overall(p)}));
+  const count = k => people.filter(p=>p.o.k===k).length;
+  const list = people.filter(p => (A.filter==='all'||p.o.k===A.filter)
+      && (A.ministry==='All ministries'||p.m===A.ministry)
+      && p.n.toLowerCase().includes(A.q.toLowerCase()));
+  const tiles = [['cleared','Cleared to serve','ok',true],['progress','In progress','info'],['expiring','Expiring within 60 days','warn'],['flag','Needs attention','bad']];
+  view.innerHTML = `<div class="admin">
+    <div class="ahead"><div class="stack" style="gap:6px"><span class="label">Office dashboard</span><h1>Volunteers</h1></div>
+      <p class="small muted">Showing 12 sample volunteers · Sarah’s row updates as you use the Volunteer view</p></div>
+    <div class="tiles">${tiles.map(([k,l,c,dark])=>`<button class="tile ${dark?'dark':''}" data-filter="${k}" aria-pressed="${A.filter===k}">
+        <span class="v">${count(k)}</span><span class="k"><span class="dot ${c}"></span>${l}</span></button>`).join('')}</div>
+    <div class="tools">
+      <div class="field"><input id="asearch" type="search" placeholder="Search by name" aria-label="Search volunteers" value="${esc(A.q)}"></div>
+      <div class="field" style="flex:none;min-width:0"><select id="amin" aria-label="Ministry">${['All ministries','Kids','Youth','Crèche'].map(o=>`<option ${o===A.ministry?'selected':''}>${o}</option>`).join('')}</select></div>
+      ${A.filter!=='all'?`<button class="link" data-filter="all">Show everyone</button>`:''}
+    </div>
+    <div class="tablebox"><table>
+      <thead><tr><th>Volunteer</th><th>Status</th><th>Training</th><th>Code</th><th>Referees</th><th>Blue Card</th><th>Card expiry</th></tr></thead>
+      <tbody>${list.length? list.map(p=>`<tr data-person="${esc(p.n)}" tabindex="0">
+        <td><div class="who">${esc(p.n)}</div><div class="sub">${p.m} · ${p.ago}</div></td>
+        <td><span class="pill ${p.o.c}">${p.o.t}</span></td>
+        <td>${cell(p.tr)}</td><td>${cell(p.cc)}</td><td>${cell(p.rf)}</td><td>${cell(p.bc)}</td>
+        <td style="font-variant-numeric:tabular-nums">${p.exp?fmtDate(p.exp):'—'}</td></tr>`).join('')
+        : `<tr><td colspan="7" class="empty">Nobody matches. Try another name or filter.</td></tr>`}</tbody>
+    </table></div>
+  </div>`;
+  const s = $('#asearch'); s.oninput = () => { A.q = s.value; const pos=s.selectionStart; renderAdmin(); const n=$('#asearch'); n.focus(); n.setSelectionRange(pos,pos); };
+  $('#amin').onchange = e => { A.ministry = e.target.value; renderAdmin(); };
+  renderDrawer(people);
+}
+
+function renderDrawer(people){
+  if(!A.open){ layer.innerHTML=''; return; }
+  const p = (people||[sarahRow(),...PEOPLE].map(x=>({...x,o:overall(x)}))).find(x=>x.n===A.open); if(!p){ layer.innerHTML=''; return; }
+  const row = (v, label, when) => {
+    const ok = ['done','ok'].includes(v), bad=['flag','expired'].includes(v), warn=['wait','check','progress'].includes(v);
+    return `<li><span class="dot ${ok?'ok':bad?'bad':warn?'warn':'none'}"></span><span>${label}</span><span class="when">${when}</span></li>`; };
+  layer.innerHTML = `<div class="scrim" data-act="close"></div>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-label="${esc(p.n)}">
+    <button class="back" data-act="close">✕ Close</button>
+    <div class="stack" style="gap:8px"><span class="label">${p.m} ministry</span><h2>${esc(p.n)}</h2><div><span class="pill ${p.o.c}">${p.o.t}</span></div></div>
+    <section class="card"><ul class="kv">
+      ${row(p.tr,'Safe Volunteers training', p.tr==='done'?'Completed':p.tr==='progress'?'Chapter 2 of 5':'Not started')}
+      ${row(p.cc,'Code of conduct', p.cc==='done'?'Signed v2026.1':'Not signed')}
+      ${row(p.rf,'Referees', p.rf==='done'?'2 of 2 replied':p.rf==='wait'?'Reminder sent automatically':p.rf==='flag'?'1 concern raised':'Not sent')}
+      ${row(p.bc,'Blue Card', p.bc==='ok'?`Verified · exp ${fmtDate(p.exp)}`:p.bc==='check'?'Check in portal':p.bc==='expired'?`Expired ${fmtDate(p.exp)}`:'Not added')}
+    </ul></section>
+    ${p.rf==='flag'?`<div class="private"><span class="label">${lock} Private · Pastor and child safety officer only</span>
+      <p>A referee answered “Yes, or I’m not sure” to question 4 and asked for a call. Hannah stays off the roster until this is resolved.</p>
+      <button class="link" style="align-self:flex-start" data-act="note">Record the outcome</button></div>`:''}
+    ${p.bc==='expired'?`<div class="private"><span class="label">Removed from roster</span><p>Ben’s Blue Card expired on ${fmtDate(p.exp)}. ChurchSuite was updated automatically and he’s been sent renewal steps.</p></div>`:''}
+    <div class="actions">
+      ${p.bc==='check'?`<button class="btn block" data-act="verify" data-who="${esc(p.n)}">I’ve checked this card in the Blue Card portal</button>
+        <p class="small muted">Card ${p.live?esc(S.blue.num):'7654321/1'} · this records your name and today’s date.</p>`:''}
+      ${p.o.k!=='cleared'?`<button class="btn ghost block" data-act="remind" data-who="${esc(p.n)}">Send a friendly reminder</button>`:''}
+      <button class="btn ghost block" data-act="cs">Open in ChurchSuite</button>
+    </div>
+    <p class="small muted">Every view and change is logged. Records are kept for 45 years.</p>
+  </aside>`;
+}
+
+/* ---------------- shared ---------------- */
+function render(){
+  document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed', b.dataset.mode===mode));
+  if(mode!=='admin') layer.innerHTML='';
+  if(mode==='volunteer') renderVolunteer(); else if(mode==='referee') renderReferee(); else renderAdmin();
+}
+function setMode(m){ mode=m; try{ history.replaceState(null,'','#'+m); }catch(e){} render(); window.scrollTo({top:0}); }
+
+function refsCheck(){
+  if(S.refs.every(r=>r.st===3)){ S.steps.referees='done'; toast('Both referees have replied.'); }
+  if(mode==='volunteer') render(); else if(mode==='admin') renderAdmin();
+}
+
+document.addEventListener('click', e => {
+  const t = e.target.closest('button, [data-act], tr[data-person]'); if(!t) return;
+  if(t.dataset.mode){ setMode(t.dataset.mode); return; }
+  if(t.dataset.modeGo){ setMode(t.dataset.modeGo); return; }
+  if(t.dataset.go){ S.screen=t.dataset.go; S.playing=false; render(); window.scrollTo({top:0}); return; }
+  if(t.dataset.step){ const id=t.dataset.step;
+    if(id==='details'){ toast('Your details are already saved.'); return; }
+    if(id==='training' && S.steps.training==='done'){ toast('Training complete. Your certificate is in your email.'); return; }
+    if(id==='conduct' && S.steps.conduct==='done'){ toast('Already signed. A copy is in your email.'); return; }
+    S.screen=id; render(); window.scrollTo({top:0}); return; }
+  if(t.dataset.pick!==undefined){ S.picked=+t.dataset.pick; render(); return; }
+  if(t.dataset.filter){ A.filter = (A.filter===t.dataset.filter && t.dataset.filter!=='all')?'all':t.dataset.filter; renderAdmin(); return; }
+  if(t.dataset.person){ A.open=t.dataset.person; renderDrawer(); return; }
+  if(t.dataset.ract==='open'){ R.screen='form'; render(); window.scrollTo({top:0}); return; }
+  if(t.dataset.ract==='reset'){ R.screen='email'; render(); return; }
+  const a = t.dataset.act;
+  if(a==='play'){ S.playing=true; render(); }
+  if(a==='chapter'){ S.chapter++; S.playing=false; render(); window.scrollTo({top:0}); }
+  if(a==='qnext'){ if(S.q<QUIZ.length-1){ S.q++; S.picked=null; render(); } else { S.steps.training='done'; S.screen='home'; toast('Training complete. Certificate saved.'); render(); window.scrollTo({top:0}); } }
+  if(a==='clearsig'){ $('#sigpad')._clear(); }
+  if(a==='sign'){ S.steps.conduct='done'; S.signedOn=new Date().toLocaleDateString('en-AU',{day:'numeric',month:'short'}); S.screen='home'; toast('Signed. A copy is on its way to your email.'); render(); window.scrollTo({top:0}); }
+  if(a==='sendrefs'){
+    S.refs.forEach((r,i)=>{ r.name=$('#rn'+i).value||r.name; r.email=$('#re'+i).value||r.email; r.rel=$('#rr'+i).value; r.yrs=$('#ry'+i).value; r.st=1; });
+    S.steps.referees='wait'; toast('Emails sent to both referees.'); render();
+    setTimeout(()=>{ S.refs.forEach(r=>{ if(r.st<2) r.st=2; }); if(mode==='volunteer') render(); }, 1800);
+    setTimeout(()=>{ S.refs[1].st=3; refsCheck(); }, 4200);
+    setTimeout(()=>{ if(S.refs[0].st<3){ S.refs[0].st=3; refsCheck(); } }, 9000);
+  }
+  if(a==='sendblue'){ S.blue.num=$('#bnum').value||S.blue.num; S.blue.exp=$('#bexp').value||S.blue.exp; S.steps.bluecard='wait'; S.screen='home'; toast('Sent to the office for checking.'); render(); }
+  if(a==='verify-self'){ S.steps.bluecard='done'; toast('The office verified your Blue Card.'); render(); }
+  if(a==='verify'){ if(t.dataset.who==='Sarah Mitchell'){ S.steps.bluecard='done'; } else { const p=PEOPLE.find(x=>x.n===t.dataset.who); if(p) p.bc='ok'; }
+    toast(`Blue Card verified for ${t.dataset.who}. Logged under your name.`); A.open=null; renderAdmin(); }
+  if(a==='remind'){ toast(`Reminder sent to ${t.dataset.who}.`); }
+  if(a==='cs'){ toast('This would open their ChurchSuite profile.'); }
+  if(a==='note'){ toast('This would open a private note only you can see.'); }
+  if(a==='close'){ A.open=null; layer.innerHTML=''; }
+  if(a==='restart'){ S=fresh(); render(); window.scrollTo({top:0}); }
+});
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape' && A.open){ A.open=null; layer.innerHTML=''; }
+  if(e.key==='Enter' && e.target.matches('tr[data-person]')){ A.open=e.target.dataset.person; renderDrawer(); }
+});
+document.addEventListener('change', e => {
+  if(e.target.id==='cagree' || e.target.id==='cname') return;
+});
+
+const h = (location.hash||'').slice(1);
+if(['volunteer','referee','admin'].includes(h)) mode=h;
+render();
+window.addEventListener('hashchange', ()=>{ const m=location.hash.slice(1); if(['volunteer','referee','admin'].includes(m) && m!==mode){ mode=m; render(); } });
+})();
+</script>
