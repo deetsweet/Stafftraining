@@ -226,7 +226,7 @@ tbody tr:last-child td{border-bottom:0}
 td .who{font-family:var(--font-head);font-weight:500;font-size:16px}
 td .sub{font-size:12.5px;color:var(--ink-3)}
 .cell{display:inline-flex;align-items:center;gap:7px;font-size:13.5px}
-.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 11px;font-size:12.5px;font-weight:700}
+.pill{white-space:nowrap;flex:none;display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 11px;font-size:12.5px;font-weight:700}
 .pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.info{background:var(--info-bg);color:var(--ink)}
 .empty{padding:28px;text-align:center;color:var(--ink-3)}
 
@@ -312,6 +312,21 @@ td .sub{font-size:12.5px;color:var(--ink-3)}
 .pdots{display:flex;gap:7px}
 .pdots span{width:8px;height:8px;border-radius:50%;background:var(--line);transition:background .2s,width .2s}
 .pdots span.on{background:var(--ink);width:22px;border-radius:4px}
+
+/* referee reports (admin) */
+.rep{border-top:1px solid var(--line);padding-top:10px}
+.reps .rep:first-of-type{border-top:0;padding-top:0}
+.rep summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;list-style:none}
+.rep summary::-webkit-details-marker{display:none}
+.rep summary > span:first-child{display:flex;flex-direction:column;min-width:0}
+.rep summary b{font-family:var(--font-head);font-weight:500;font-size:16.5px}
+.ans{list-style:none;margin:10px 0 4px;padding:0;display:flex;flex-direction:column;gap:6px}
+.ans li{display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center;font-size:14px;padding:8px 10px;border-radius:10px;background:var(--sunk)}
+.ans li.is-r{background:var(--bad-bg)}
+.ans q{grid-column:1/-1;font-style:italic;quotes:"“" "”";font-size:14px}
+.ch{font-size:12px;font-weight:700;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.ch.g{background:var(--ok-bg);color:var(--ok)}
+.ch.r{background:var(--bad);color:var(--bg)}
 
 /* referee statements */
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -842,6 +857,9 @@ function renderReferee(){
   };
   f.addEventListener('change', update);
   f.onsubmit = e => { e.preventDefault();
+    const ans={}, com={};
+    yn.forEach(x=>{ ans[x.id]=f.querySelector(`input[name=${x.id}]:checked`).value; const t=$('#c-'+x.id+' textarea'); if(t && t.value.trim()) com[x.id]=t.value.trim(); });
+    S.refAnswers={ans, com, rel:$('#rel').value, phone:($('#rphone')||{}).value||'', on:'17 Nov 2026'};
     R.screen='thanks'; render(); window.scrollTo({top:0});
     if(S.refs[0].st<3 && S.steps.referees!=='todo'){ S.refs[0].st=3; if(R.bad) S.flagged=true; refsCheck(); }
   };
@@ -919,6 +937,53 @@ function renderAdmin(){
   renderDrawer(people);
 }
 
+const REPORT_Q = [
+  ['s1','Confirmed their identity'],
+  ['s2','Has known them for at least two years'],
+  ['s3','Not aware of any accusation of harm or mistreatment'],
+  ['s4','Would trust them to care for children and vulnerable people'],
+  ['s5','Nothing Lifepoint should know before they serve']
+];
+const allGreen = {s1:'g',s2:'g',s3:'g',s4:'g',s5:'g'};
+function reportsFor(p){
+  const first = p.n.split(' ')[0];
+  if(p.live){
+    return S.refs.map((r,i)=>{
+      if(r.st<3) return {name:r.name, rel:r.rel, yrs:r.yrs, pending: r.st>0 ? 'Email opened · reminder goes out in 3 days' : 'Not sent yet'};
+      if(i===0 && S.refAnswers) return {name:r.name, rel:S.refAnswers.rel, yrs:r.yrs, on:S.refAnswers.on, ans:S.refAnswers.ans, com:S.refAnswers.com, phone:S.refAnswers.phone};
+      return {name:r.name, rel:r.rel, yrs:r.yrs, on:'17 Nov 2026', ans:allGreen, com:{}};
+    });
+  }
+  const seed = {
+    'Hannah Cole':[{name:'Greg Lawson', rel:'Work colleague', yrs:'2–5 years', on:'2 Nov 2026', ans:{...allGreen, s4:'r', s5:'r'}, com:{s4:'I’d rather talk to someone about this in person.', s5:'Some things I saw at a previous job. Happy to explain on the phone.'}, phone:'0400 000 000'},
+                   {name:'Amy Chen', rel:'Friend', yrs:'5+ years', on:'31 Oct 2026', ans:allGreen, com:{}}],
+    'Tom Brennan':[{name:'Luke Harris', rel:'Former team leader', yrs:'5+ years', on:'8 Nov 2026', ans:allGreen, com:{}},
+                   {name:'Kate Morris', rel:'Work colleague', yrs:'2–5 years', pending:'Not opened · reminder sent 12 Nov'}]
+  };
+  if(seed[p.n]) return seed[p.n];
+  if(p.rf==='done') return [
+    {name:'Reference one', rel:'Former team leader', yrs:'5+ years', on:p.ago.replace('Cleared ',''), ans:allGreen, com:{}},
+    {name:'Reference two', rel:'Friend', yrs:'2–5 years', on:p.ago.replace('Cleared ',''), ans:allGreen, com:{}}];
+  return [];
+}
+function reportsHTML(p){
+  const list = reportsFor(p); if(!list.length) return '';
+  const first = esc(p.n.split(' ')[0]);
+  return `<section class="card stack reps">
+    <div class="stack" style="gap:4px"><span class="label">${lock} Referee reports</span>
+    <p class="small muted">Only the Senior Pastor and Safe Spaces Coordinator can open these. ${first} never sees them.</p></div>
+    ${list.map((r,i)=>{
+      const reds = r.ans ? Object.values(r.ans).filter(v=>v==='r').length : 0;
+      const status = r.pending ? `<span class="pill warn">Waiting</span>` : reds ? `<span class="pill bad">${reds} concern${reds>1?'s':''}</span>` : `<span class="pill ok">No issues</span>`;
+      return `<details class="rep" ${reds||(!list.some(x=>x.ans&&Object.values(x.ans).includes('r'))&&i===0)?'open':''}>
+        <summary><span><b>${esc(r.name)}</b><span class="small muted">${esc(r.rel)} · known ${esc(r.yrs)}${r.on?` · received ${esc(r.on)}`:''}</span></span>${status}</summary>
+        ${r.pending ? `<p class="small muted" style="padding:4px 0 2px">${esc(r.pending)}</p>` : `<ul class="ans">${REPORT_Q.map(([k,q])=>`<li class="${r.ans[k]==='r'?'is-r':''}">
+            <span>${q}</span><span class="ch ${r.ans[k]==='r'?'r':'g'}">${r.ans[k]==='r'?'! Possible issue':'✓ Yes'}</span>
+            ${r.com[k]?`<q>${esc(r.com[k])}</q>`:''}</li>`).join('')}</ul>
+          ${r.phone?`<p class="small">Asked for a call: <b>${esc(r.phone)}</b></p>`:''}`}
+      </details>`;}).join('')}
+  </section>`;
+}
 function renderDrawer(people){
   if(!A.open){ layer.innerHTML=''; return; }
   const p = (people||[sarahRow(),...PEOPLE].map(x=>({...x,o:overall(x)}))).find(x=>x.n===A.open); if(!p){ layer.innerHTML=''; return; }
@@ -932,12 +997,13 @@ function renderDrawer(people){
     <section class="card"><ul class="kv">
       ${row(p.tr,'Safe Spaces training', p.tr==='done'?'Completed':p.tr==='progress'?'Chapter 2 of 5':'Not started')}
       ${row(p.cc,'Code of conduct', p.cc==='done'?'Signed v2026.1':'Not signed')}
-      ${row(p.rf,'Referees', p.rf==='done'?'2 of 2 replied':p.rf==='wait'?'Reminder sent automatically':p.rf==='flag'?'1 concern raised':'Not sent')}
+      ${row(p.rf,'Referees', p.rf==='done'?'2 of 2 replied':p.rf==='wait'?'Reminder sent automatically':p.rf==='flag'?'Concern raised':'Not sent')}
       ${row(p.bc,'Blue Card', p.bc==='ok'?`Verified · exp ${fmtDate(p.exp)}`:p.bc==='check'?'Check in portal':p.bc==='expired'?`Expired ${fmtDate(p.exp)}`:'Not added')}
     </ul></section>
     ${p.rf==='flag'?`<div class="private"><span class="label">${lock} Private · Pastor and Safe Spaces Coordinator only</span>
-      <p>A referee tapped red on “I would trust them to care for children” and left a comment and phone number. ${esc(p.n.split(' ')[0])} stays off the roster until this is resolved.</p>
+      <p>A referee flagged a possible issue and asked for a call. Their full report is below. ${esc(p.n.split(' ')[0])} stays off the roster until this is resolved.</p>
       <button class="link" style="align-self:flex-start" data-act="note">Record the outcome</button></div>`:''}
+    ${reportsHTML(p)}
     ${p.bc==='expired'?`<div class="private"><span class="label">Removed from roster</span><p>Ben’s Blue Card expired on ${fmtDate(p.exp)}. ChurchSuite was updated automatically and he’s been sent renewal steps.</p></div>`:''}
     <div class="actions">
       ${p.bc==='check'?`<button class="btn block" data-act="verify" data-who="${esc(p.n)}">I’ve checked this card in the Blue Card portal</button>
