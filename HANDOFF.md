@@ -31,11 +31,10 @@ The app takes every volunteer through onboarding and child-safe checks, then iss
 | Brand guide | *Lifepoint Brand Guide 2026-10* (PDF, Dan has it) |
 | Team handbook | *Team Lifepoint Handbook (draft)* (PDF, Dan has it). The source for induction content |
 
-### Kept OUT of GitHub on purpose
-- **Dan's signature image** and the **signed sample certificate PDF**. Both are listed in `.gitignore`.
-- In the repo, the certificate's signature points to `../brand/signature-dan-sweetman.png`, which isn't uploaded. The published mockup was built by adding the signature back in from a private local copy.
-- **When republishing from a new chat:** either ask Dan for the signature file and add it in before publishing, or publish without it, which leaves the signature line blank. Never commit the signature.
-- To update the **same** mockup link, publish with `url: https://claude.ai/artifact/HMkBEwXjWLN15aar6gLfwu`. Otherwise a separate page is created.
+### Signature
+- **No signature on the certificate.** Dan removed it and doesn't want his signature anywhere. The certificate shows his name and title under a plain line.
+- **Never add a signature image to the app or the repository.**
+- To update the **same** mockup link, publish `mockup/index.html` with `url: https://claude.ai/artifact/HMkBEwXjWLN15aar6gLfwu`. Otherwise a separate page is created.
 
 ---
 
@@ -96,7 +95,7 @@ Finishing shows a **"You're cleared to serve"** screen, then the **certificate**
   - "…officially cleared to join **TEAM LIFEPOINT**"
   - "as a Lifepoint Team Member · [team]"
   - four ticks: training, code of conduct, referees, Blue Card
-  - Dan's signature, with "Dan Sweetman, Senior Pastor, Lifepoint Church"
+  - "Dan Sweetman, Senior Pastor, Lifepoint Church" under a plain line, with no signature
 - **"Valid until"** is the earlier of the training refresher (1 year) and the Blue Card expiry.
 - It's emailed to the volunteer and saved on their record.
 
