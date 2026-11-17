@@ -313,6 +313,18 @@ td .sub{font-size:12.5px;color:var(--ink-3)}
 .pdots span{width:8px;height:8px;border-radius:50%;background:var(--line);transition:background .2s,width .2s}
 .pdots span.on{background:var(--ink);width:22px;border-radius:4px}
 
+/* sign-in + roles */
+.codein{font-family:var(--font-head);font-size:28px !important;letter-spacing:.3em;text-align:center;font-variant-numeric:tabular-nums}
+.gbtn{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
+.gbtn .g{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-body);font-weight:700;background:var(--sunk)}
+.rolebar{border:1.5px dashed var(--ink-3);border-radius:18px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.rb-top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:space-between}
+.rseg button{font-size:14px;padding:7px 12px}
+.ahead-r{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+@media (max-width:640px){.ahead-r{align-items:flex-start}}
+.btn.sm{padding:8px 14px;font-size:14px}
+.locked{display:flex;gap:6px;align-items:center}
+
 /* referee reports (admin) */
 .rep{border-top:1px solid var(--line);padding-top:10px}
 .reps .rep:first-of-type{border-top:0;padding-top:0}
@@ -407,7 +419,13 @@ const fresh = () => ({
 let S = fresh();
 let mode = 'volunteer';
 let R = {screen:'email'};
-let A = {filter:'all', q:'', ministry:'All teams', open:null};
+let A = {filter:'all', q:'', ministry:'All teams', open:null, signedIn:false, si:'google', role:'pastor', views:{}};
+const ROLES = {
+  pastor:{t:'Senior Pastor', all:true, reports:true, verify:true, roles:true, d:'Sees everything, including referee reports and concerns, and decides who has which role.'},
+  coord:{t:'Safe Spaces Coordinator', all:true, reports:true, verify:true, d:'Sees everything, including referee reports and concerns, and records how concerns were resolved.'},
+  office:{t:'Office admin', all:true, verify:true, d:'Sees everyone’s progress, verifies Blue Cards and sends invites and reminders. Can’t open referee reports or concern details.'},
+  leader:{t:'Team leader · Welcome team', team:'Welcome', d:'Sees only the Welcome team: who’s cleared, in progress or expiring. No referee reports, concern details or Blue Card numbers.'}
+};
 
 const STEPS = [
   {id:'details', t:'Your details', m:'Name, phone, emergency contact'},
@@ -445,6 +463,7 @@ function vWelcome(){
       <h1>Welcome to the team, Sarah.</h1>
       <p>Before your first Sunday there are six steps. They keep everyone at Lifepoint safe and help you serve with confidence. Most people finish in about an hour, and you can stop and come back any time.</p>
       <div><button class="btn light" data-go="home">Let’s get started <span class="arr">→</span></button></div>
+      <p class="small">Already started? <button class="link" style="color:var(--on-charcoal)" data-go="signin">Sign in</button></p>
       </div>
     </section>
     <section class="card">
@@ -603,6 +622,24 @@ function setupDeck(){
   updatePager();
 }
 function goSlide(k){ S.slide=Math.max(0,Math.min(4,k)); const d=$('#deck'); if(d) d.scrollTo({left:S.slide*(d.clientWidth+12),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); updatePager(); }
+
+function vSignin(){
+  const code = S.si==='code';
+  return `<div class="phone">
+    <button class="back" data-go="welcome">← Back</button>
+    <section class="hero">${badge('ghost')}${badge('badge-sm')}
+      <span class="script">welcome back</span>
+      <h1 style="font-size:28px">${code?'Check your email':'Sign in'}</h1>
+      <p>${code?'We’ve sent a 6-digit code to sarah.mitchell@example.com. It works for 10 minutes.':'No password needed. We’ll send you a one-time code.'}</p>
+    </section>
+    ${code ? `<div class="field"><label for="vcode">Your code</label><input id="vcode" class="codein" inputmode="numeric" autocomplete="one-time-code" value="482 913"></div>
+      <button class="btn block" data-act="vcode">Sign in <span class="arr">→</span></button>
+      <p class="small muted" style="text-align:center">Didn’t get it? <button class="link" data-act="vresend">Send another code</button></p>`
+    : `<div class="field"><label for="vemail">Email or mobile</label><input id="vemail" autocomplete="email" value="sarah.mitchell@example.com"></div>
+      <button class="btn block" data-act="vsend">Send me a code <span class="arr">→</span></button>
+      <p class="small muted" style="text-align:center">You’ll stay signed in on this phone for 30 days.</p>`}
+  </div>`;
+}
 
 function vConduct(){
   return `<div class="phone">
@@ -774,7 +811,7 @@ function setupPad(){
 
 function renderVolunteer(){
   if(S.screen==='home' && doneCount()===STEPS.length && !S.celebrated){ S.celebrated=true; S.screen='cleared'; }
-  const map = {welcome:vWelcome, home:vHome, induct:vInduct, training:vTraining, conduct:vConduct, referees:vReferees, bluecard:vBlue, cleared:vCleared};
+  const map = {welcome:vWelcome, signin:vSignin, home:vHome, induct:vInduct, training:vTraining, conduct:vConduct, referees:vReferees, bluecard:vBlue, cleared:vCleared};
   view.innerHTML = map[S.screen]();
   if(S.screen==='conduct') setupPad();
   if(S.screen==='induct') setupDeck();
@@ -794,6 +831,7 @@ function renderReferee(){
           <p>Sarah Mitchell would like to volunteer at Lifepoint Church, and she’s named you as someone who knows her well.</p>
           <p>Could you give her a quick reference? It’s a few statements you tap green or red, and takes about two minutes. Your answers are private. Only our senior pastor and Safe Spaces Coordinator can see them.</p>
           <div><button class="btn" data-ract="open">Give a quick reference <span class="arr">→</span></button></div>
+          <p class="small muted">This link is just for you. It expires in 14 days and stops working once you’ve replied.</p>
           <p class="small muted">Thank you for helping us keep Lifepoint safe for everyone.<br>Lifepoint Church · Rothwell and Caboolture West</p>
         </div>
       </article>
@@ -905,21 +943,47 @@ const cell = (v) => {
   return `<span class="cell"><span class="dot ${m[0]}"></span>${m[1]}</span>`;
 };
 
+function staffSignin(){
+  const two = A.si==='code';
+  view.innerHTML = `<div class="phone">
+    <section class="hero">${badge('ghost')}${badge('badge-sm')}
+      <span class="label" style="color:var(--on-charcoal-2)">Staff and leaders</span>
+      <h1 style="font-size:28px">${two?'Confirm it’s you':'Sign in to Ready to Serve'}</h1>
+      <p>${two?'Enter the code from your authenticator app or the text we just sent.':'Use your Lifepoint Google account. Volunteers don’t sign in here.'}</p>
+    </section>
+    ${two ? `<div class="field"><label for="scode">6-digit code</label><input id="scode" class="codein" inputmode="numeric" autocomplete="one-time-code" value="731 052"></div>
+      <button class="btn block" data-act="scode">Continue <span class="arr">→</span></button>`
+    : `<button class="btn block gbtn" data-act="google"><span class="g" aria-hidden="true">G</span>Sign in with Google</button>
+      <p class="small muted" style="text-align:center">Only @lifepoint.org.au accounts with a role can sign in. Two-step verification is required.</p>`}
+  </div>`;
+}
+function rolebar(){
+  const r=ROLES[A.role];
+  return `<div class="rolebar">
+    <div class="rb-top"><span class="label">Prototype · view as</span>
+      <div class="seg rseg" role="group" aria-label="View the dashboard as">${Object.entries(ROLES).map(([k,v])=>`<button type="button" data-role="${k}" aria-pressed="${A.role===k}">${v.t.split(' · ')[0]}</button>`).join('')}</div></div>
+    <p class="small"><b>${r.t}.</b> ${r.d}</p>
+  </div>`;
+}
 function renderAdmin(){
-  const people = [sarahRow(), ...PEOPLE].map(p=>({...p, o:overall(p)}));
+  if(!A.signedIn){ staffSignin(); return; }
+  const role = ROLES[A.role];
+  const people = [sarahRow(), ...PEOPLE].map(p=>({...p, o:overall(p)})).filter(p=>role.all||p.m===role.team);
   const count = k => people.filter(p=>p.o.k===k).length;
   const list = people.filter(p => (A.filter==='all'||p.o.k===A.filter)
       && (A.ministry==='All teams'||p.m===A.ministry)
       && p.n.toLowerCase().includes(A.q.toLowerCase()));
   const tiles = [['cleared','Cleared to serve','ok',true],['progress','In progress','info'],['expiring','Expiring within 60 days','warn'],['flag','Needs attention','bad']];
   view.innerHTML = `<div class="admin">
-    <div class="ahead"><div class="stack" style="gap:6px"><span class="label">Office dashboard</span><h1>Volunteers</h1></div>
-      <p class="small muted">Showing 12 sample volunteers · Sarah’s row updates as you use the Volunteer view</p></div>
+    ${rolebar()}
+    <div class="ahead"><div class="stack" style="gap:6px"><span class="label">${role.all?'Office dashboard':esc(role.team)+' team'}</span><h1>Volunteers</h1></div>
+      <div class="ahead-r"><p class="small muted">${people.length} sample volunteers · Sarah’s row updates as you use the Volunteer view</p>
+      <div class="tools" style="justify-content:flex-end">${role.roles?`<button class="btn ghost sm" data-act="roles">Manage roles</button>`:''}<button class="link" data-act="signout">Sign out</button></div></div></div>
     <div class="tiles">${tiles.map(([k,l,c,dark])=>`<button class="tile ${dark?'dark':''}" data-filter="${k}" aria-pressed="${A.filter===k}">
         <span class="v">${count(k)}</span><span class="k"><span class="dot ${c}"></span>${l}</span></button>`).join('')}</div>
     <div class="tools">
       <div class="field"><input id="asearch" type="search" placeholder="Search by name" aria-label="Search volunteers" value="${esc(A.q)}"></div>
-      <div class="field" style="flex:none;min-width:0"><select id="amin" aria-label="Team">${['All teams','Kids','Youth','Crèche','Welcome','Worship','Production','Café','Small groups','Prayer'].map(o=>`<option ${o===A.ministry?'selected':''}>${o}</option>`).join('')}</select></div>
+      ${role.all?`<div class="field" style="flex:none;min-width:0"><select id="amin" aria-label="Team">${['All teams','Kids','Youth','Crèche','Welcome','Worship','Production','Café','Small groups','Prayer'].map(o=>`<option ${o===A.ministry?'selected':''}>${o}</option>`).join('')}</select></div>`:''}
       ${A.filter!=='all'?`<button class="link" data-filter="all">Show everyone</button>`:''}
     </div>
     <div class="tablebox"><table>
@@ -933,7 +997,7 @@ function renderAdmin(){
     </table></div>
   </div>`;
   const s = $('#asearch'); s.oninput = () => { A.q = s.value; const pos=s.selectionStart; renderAdmin(); const n=$('#asearch'); n.focus(); n.setSelectionRange(pos,pos); };
-  $('#amin').onchange = e => { A.ministry = e.target.value; renderAdmin(); };
+  if($('#amin')) $('#amin').onchange = e => { A.ministry = e.target.value; renderAdmin(); };
   renderDrawer(people);
 }
 
@@ -987,6 +1051,10 @@ function reportsHTML(p){
 function renderDrawer(people){
   if(!A.open){ layer.innerHTML=''; return; }
   const p = (people||[sarahRow(),...PEOPLE].map(x=>({...x,o:overall(x)}))).find(x=>x.n===A.open); if(!p){ layer.innerHTML=''; return; }
+  const role = ROLES[A.role];
+  const hasReports = reportsFor(p).some(r=>r.ans);
+  if(role.reports && hasReports){ const k=A.role+'|'+p.n; if(!A.views[k]) A.views[k]=new Date().toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit'}); }
+  const logged = role.reports && hasReports ? `<p class="small muted">${lock} Logged: ${role.t} opened these reports today at ${A.views[A.role+'|'+p.n]}.</p>` : '';
   const row = (v, label, when) => {
     const ok = ['done','ok'].includes(v), bad=['flag','expired'].includes(v), warn=['wait','check','progress'].includes(v);
     return `<li><span class="dot ${ok?'ok':bad?'bad':warn?'warn':'none'}"></span><span>${label}</span><span class="when">${when}</span></li>`; };
@@ -1000,18 +1068,33 @@ function renderDrawer(people){
       ${row(p.rf,'Referees', p.rf==='done'?'2 of 2 replied':p.rf==='wait'?'Reminder sent automatically':p.rf==='flag'?'Concern raised':'Not sent')}
       ${row(p.bc,'Blue Card', p.bc==='ok'?`Verified · exp ${fmtDate(p.exp)}`:p.bc==='check'?'Check in portal':p.bc==='expired'?`Expired ${fmtDate(p.exp)}`:'Not added')}
     </ul></section>
-    ${p.rf==='flag'?`<div class="private"><span class="label">${lock} Private · Pastor and Safe Spaces Coordinator only</span>
+    ${p.rf==='flag' && !role.reports?`<div class="private"><span class="label">${lock} Restricted</span><p>Something needs following up before ${esc(p.n.split(' ')[0])} can serve. The Safe Spaces Coordinator is handling it. Only the Senior Pastor and Safe Spaces Coordinator can see the details.</p></div>`:''}
+    ${p.rf==='flag' && role.reports?`<div class="private"><span class="label">${lock} Private · Pastor and Safe Spaces Coordinator only</span>
       <p>A referee flagged a possible issue and asked for a call. Their full report is below. ${esc(p.n.split(' ')[0])} stays off the roster until this is resolved.</p>
       <button class="link" style="align-self:flex-start" data-act="note">Record the outcome</button></div>`:''}
-    ${reportsHTML(p)}
+    ${role.reports ? reportsHTML(p)+logged : (reportsFor(p).length?`<p class="small muted locked">${lock} Referee reports are restricted to the Senior Pastor and Safe Spaces Coordinator.</p>`:'')}
     ${p.bc==='expired'?`<div class="private"><span class="label">Removed from roster</span><p>Ben’s Blue Card expired on ${fmtDate(p.exp)}. ChurchSuite was updated automatically and he’s been sent renewal steps.</p></div>`:''}
     <div class="actions">
-      ${p.bc==='check'?`<button class="btn block" data-act="verify" data-who="${esc(p.n)}">I’ve checked this card in the Blue Card portal</button>
+      ${p.bc==='check' && role.verify?`<button class="btn block" data-act="verify" data-who="${esc(p.n)}">I’ve checked this card in the Blue Card portal</button>
         <p class="small muted">Card ${p.live?esc(S.blue.num):'7654321/1'} · this records your name and today’s date.</p>`:''}
       ${p.o.k!=='cleared'?`<button class="btn ghost block" data-act="remind" data-who="${esc(p.n)}">Send a friendly reminder</button>`:''}
       <button class="btn ghost block" data-act="cs">Open in ChurchSuite</button>
     </div>
     <p class="small muted">Every view and change is logged. Records are kept for 45 years.</p>
+  </aside>`;
+}
+
+function openRoles(){
+  const staff=[['Dan Sweetman','Senior Pastor'],['Safe Spaces Coordinator','Safe Spaces Coordinator'],['Office admin (2 people)','Office admin'],['Team leaders (14 people)','Team leader']];
+  layer.innerHTML = `<div class="scrim" data-act="close"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Manage roles">
+    <button class="back" data-act="close">✕ Close</button>
+    <div class="stack" style="gap:6px"><span class="label">Senior Pastor only</span><h2>Who can see what</h2>
+    <p class="small muted">Staff sign in with their Lifepoint Google account. Turning off someone’s Google account removes their access here too.</p></div>
+    <section class="card"><ul class="kv">${staff.map(([n,r])=>`<li><span class="dot info"></span><span>${n}</span><span class="when">${r}</span></li>`).join('')}</ul></section>
+    <section class="card stack"><span class="label">What each role can do</span>
+      ${Object.values(ROLES).map(v=>`<div><b>${v.t.split(' · ')[0]}</b><p class="small muted">${v.d}</p></div>`).join('')}</section>
+    <button class="btn ghost block" data-act="addrole">Give someone a role</button>
+    <p class="small muted">Role changes are logged with who made them and when.</p>
   </aside>`;
 }
 
@@ -1039,6 +1122,7 @@ document.addEventListener('click', e => {
     if(id==='conduct' && S.steps.conduct==='done'){ toast('Already signed. A copy is in your email.'); return; }
     S.screen=id; render(); window.scrollTo({top:0}); return; }
   if(t.dataset.pick!==undefined){ S.picked=+t.dataset.pick; render(); return; }
+  if(t.dataset.role){ A.role=t.dataset.role; A.open=null; A.filter='all'; A.ministry='All teams'; layer.innerHTML=''; renderAdmin(); return; }
   if(t.dataset.filter){ A.filter = (A.filter===t.dataset.filter && t.dataset.filter!=='all')?'all':t.dataset.filter; renderAdmin(); return; }
   if(t.dataset.person){ A.open=t.dataset.person; renderDrawer(); return; }
   if(t.dataset.ract==='open'){ R.screen='form'; R.bad=false; render(); window.scrollTo({top:0}); return; }
@@ -1061,9 +1145,17 @@ document.addEventListener('click', e => {
   if(a==='verify'){ if(t.dataset.who==='Sarah Mitchell'){ S.steps.bluecard='done'; } else { const p=PEOPLE.find(x=>x.n===t.dataset.who); if(p) p.bc='ok'; }
     toast(`Blue Card verified for ${t.dataset.who}. Logged under your name.`); A.open=null; renderAdmin(); }
   if(a==='remind'){ toast(`Reminder sent to ${t.dataset.who}.`); }
+  if(a==='addrole'){ toast('This would let you pick a person and a role.'); }
   if(a==='cs'){ toast('This would open their ChurchSuite profile.'); }
   if(a==='note'){ toast('This would open a private note only you can see.'); }
   if(a==='close'){ A.open=null; layer.innerHTML=''; }
+  if(a==='vsend'){ S.si='code'; render(); }
+  if(a==='vresend'){ toast('A new code is on its way.'); }
+  if(a==='vcode'){ S.si=null; S.screen='home'; toast('Signed in. Welcome back, Sarah.'); render(); window.scrollTo({top:0}); }
+  if(a==='google'){ A.si='code'; renderAdmin(); }
+  if(a==='scode'){ A.si='google'; A.signedIn=true; renderAdmin(); window.scrollTo({top:0}); }
+  if(a==='signout'){ A.signedIn=false; A.open=null; layer.innerHTML=''; renderAdmin(); window.scrollTo({top:0}); }
+  if(a==='roles'){ openRoles(); }
   if(a==='snext'){ goSlide((S.slide||0)+1); }
   if(a==='sprev'){ goSlide((S.slide||0)-1); }
   if(a==='imin'){ S.steps.induct='done'; S.slide=0; S.screen='home'; toast('Welcome to Team Lifepoint.'); render(); window.scrollTo({top:0}); }
